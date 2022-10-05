@@ -16,9 +16,17 @@ namespace WarOfFoxesAndRabbits
             sate++;
         }
 
+        public override bool Die()
+        {
+            if (Sate == 0)
+                return true;
+            else
+                return false;
+        }
         public override void Update()
         {
             sate--;
         }
+        
     }
 }

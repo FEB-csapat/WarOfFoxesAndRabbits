@@ -46,7 +46,6 @@ namespace WarOfFoxesAndRabbits
                 for (int x = 0; x < GameVariables.cellsVerticallyCount; x++)
                 {
                     field[x, y] = new Cell(new Vector2(x * GameVariables.cellSize, y * GameVariables.cellSize), GraphicsDevice);
-
                 }
             }
         }

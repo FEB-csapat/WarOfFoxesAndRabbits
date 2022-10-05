@@ -56,7 +56,7 @@ namespace WarOfFoxesAndRabbits
 
         public void grassEaten()
         {
-            grass -= 2;
+            grass-=2;
         }
 
         public Vector2 Position { get => position; }
@@ -71,6 +71,7 @@ namespace WarOfFoxesAndRabbits
                     {
                         case 0:
                             return new Color(130, 200, 0);
+                            //return new Color(0, 0, 0);
                         case 1:
                             return new Color(111, 183, 0);
                         case 2:

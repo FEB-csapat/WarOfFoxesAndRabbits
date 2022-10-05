@@ -25,6 +25,14 @@ namespace WarOfFoxesAndRabbits
             sate += food;
         }
 
+        public virtual bool Die()
+        {
+            if (Sate == 0)
+                return true;
+            else
+                return false;
+        }
+
         // Minden ami egy generáció alatt történik, az az updateban kell legyen. pl: evés, szaporodás
         public virtual void Update()
         {

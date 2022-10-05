@@ -8,6 +8,12 @@ namespace WarOfFoxesAndRabbits
     {
         static public Cell[,] Check(Cell[,] field, int x, int y)
         {
+            if (field[x,y].inhabitant.Die())
+            {
+                field[x, y].inhabitant = null;
+                return field;
+            }
+
 
             if (!field[x, y].inhabitant.hasMoved)
             {
@@ -110,7 +116,7 @@ namespace WarOfFoxesAndRabbits
 
                     if (field[x, y].inhabitant == null)
                     {
-                        field[x, y].Grow();
+                        //field[x, y].Grow();
                     }
 
                 }
