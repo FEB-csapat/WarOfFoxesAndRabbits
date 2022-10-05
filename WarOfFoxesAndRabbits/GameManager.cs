@@ -15,6 +15,7 @@ namespace WarOfFoxesAndRabbits
                 if (field[x, y].Grass >= 1 && field[x, y].inhabitant.Sate < 5)
                 {
                     (field[x, y].inhabitant as Rabbit).Eat(field[x, y].Grass);
+                    field[x, y].grassEaten();
                 }
 
 
@@ -35,11 +36,14 @@ namespace WarOfFoxesAndRabbits
                             {
                                 if (field[x + px, y + py].inhabitant==null)
                                 {
+                                  //  System.Diagnostics.Debug.WriteLine("Adding surroundings: x: y: " + (x + px) + " " + (y  + py)) ;
                                     surroundingCells.Add(field[x + px, y + py]);
                                 }                            
                             }
+
                         }
                     }
+
 
                     // todo: shuffle list
                     if (surroundingCells.Count != 0)
@@ -110,7 +114,11 @@ namespace WarOfFoxesAndRabbits
                         }
                     }
 
-                    field[x, y].Grow();
+                    if (field[x, y].inhabitant == null)
+                    {
+                        field[x, y].Grow();
+                    }
+                    
                 }
             }
 

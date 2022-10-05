@@ -34,7 +34,7 @@ namespace WarOfFoxesAndRabbits
             grass = new Random().Next(0,3);
 
             // randomly spawn a rabbit
-            inhabitant = new Random().Next(0, 2) == 1 ? new Rabbit() : null;
+            inhabitant = new Random().Next(0, 7) == 1 ? new Rabbit() : null;
         }
 
         // If we want to change the cell's color, we need to call this first
@@ -67,6 +67,12 @@ namespace WarOfFoxesAndRabbits
         }
 
         public int Grass { get => grass; }
+
+
+        public void grassEaten()
+        {
+            grass--;
+        }
 
         public Vector2 Position { get => position; }
 

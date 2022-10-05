@@ -11,9 +11,9 @@ namespace WarOfFoxesAndRabbits
             Color = new Color(255,255,255);
         }
 
-        public override void Eat(int grass)
+        public void Eat()
         {
-            sate += grass;
+            sate++;
         }
 
         public override void Update()

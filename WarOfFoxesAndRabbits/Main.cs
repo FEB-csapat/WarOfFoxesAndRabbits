@@ -24,8 +24,8 @@ namespace WarOfFoxesAndRabbits
             Window.AllowUserResizing = true;
 
             // this two line limits the fps to 30
-            this.IsFixedTimeStep = true;//false;
-           // this.TargetElapsedTime = TimeSpan.FromSeconds(1d/2d ); //60);
+         //   this.IsFixedTimeStep = true;//false;
+         //   this.TargetElapsedTime = TimeSpan.FromSeconds(1d/2d ); //60);
         }
 
         protected override void Initialize()
@@ -61,13 +61,16 @@ namespace WarOfFoxesAndRabbits
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (gameTime.TotalGameTime.TotalSeconds >= 1) {
+                GameManager.Update(field);
+            }
 
-            GameManager.Update(field);
+
 
             // TODO: Add your update logic here
 
             base.Update(gameTime);
-            System.Diagnostics.Debug.WriteLine("update");
+            
         }
 
         protected override void Draw(GameTime gameTime)
@@ -76,6 +79,8 @@ namespace WarOfFoxesAndRabbits
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
+
+          //  System.Diagnostics.Debug.WriteLine("DRAWING");
 
             for (int y = 0; y < GameVariables.cellsVerticallyCount; y++)
             {
