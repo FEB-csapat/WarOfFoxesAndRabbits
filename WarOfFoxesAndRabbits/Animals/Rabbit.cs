@@ -1,7 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System.Formats.Asn1;
-using System.Runtime.InteropServices;
-
 namespace WarOfFoxesAndRabbits
 {
     class Rabbit : Animal

@@ -19,15 +19,14 @@ namespace WarOfFoxesAndRabbits
             {
                 // rules
 
-                // TODO: If sate=4 cannot eat grass:2
+                // TODO: If sate=4 cannot eat grass that's value is2
                 if (field[x, y].Grass >= 1 && field[x, y].inhabitant.Sate < 5)
                 {
                     (field[x, y].inhabitant as Rabbit).Eat();
                     field[x, y].grassEaten();
                 }
 
-
-                // move 
+                
                 if (field[x, y].Grass < 1)
                 {
 
@@ -44,13 +43,13 @@ namespace WarOfFoxesAndRabbits
                             && y + py < GameVariables.cellsVerticallyCount && x + px < GameVariables.cellsHorizontallyCount
                             && (px != 0 && py != 0))
                             {
-                                // check cells to move
+                                // Check cells to move
                                 if (field[x + px, y + py].inhabitant == null)
                                 {
                                     surroundingCellsToMove.Add(field[x + px, y + py]);
                                 }
 
-                                // check mates to mate with
+                                // Check mates to mate with
                                 if (fatherRabbit == null 
                                 && field[x, y].inhabitant.Sate >= 4
                                 && field[x + px, y + py].inhabitant != null
@@ -68,9 +67,10 @@ namespace WarOfFoxesAndRabbits
 
                     if (surroundingCellsToMove.Count != 0)
                     {
+                        // Birth rabbit to empty cell
                         if (fatherRabbit != null)
                         {
-                            // Birth
+                            
                             int r = new Random().Next(0, surroundingCellsToMove.Count);
                             surroundingCellsToMove[r].inhabitant = new Rabbit();
                             surroundingCellsToMove.RemoveAt(r);
@@ -79,6 +79,7 @@ namespace WarOfFoxesAndRabbits
                             field[x, y].inhabitant.hasProduced = true;
                         }
 
+                        // Move rabbit to cell with best grass on it
                         if (surroundingCellsToMove.Count != 0)
                         {
                             List<Cell> optionalCells = surroundingCellsToMove.Where(x => x.Grass == surroundingCellsToMove.Max(y => y.Grass)).ToList();
@@ -95,35 +96,14 @@ namespace WarOfFoxesAndRabbits
             }
             return field;
         }
-
-        public void Die()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Eat()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Move()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reproduce()
-        {
-            throw new NotImplementedException();
-        }
     }
 
-    // manages the game's rules
+    // Manages the game's rules
     class GameManager
     {
-        // returns the modified field
+        // Modify the fields according to the rules
         public static Cell[,] Update(Cell[,] field)
         {
-
             for (int y = 0; y < GameVariables.cellsVerticallyCount; y++)
             {
                 for (int x = 0; x < GameVariables.cellsHorizontallyCount; x++)
@@ -137,9 +117,7 @@ namespace WarOfFoxesAndRabbits
                         }
                         else if (field[x, y].inhabitant is Fox)
                         {
-
-
-
+                            // TODO: implement FoxHandler
                         }
                     }
 

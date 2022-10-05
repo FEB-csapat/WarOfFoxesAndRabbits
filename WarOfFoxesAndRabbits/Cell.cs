@@ -7,7 +7,6 @@ namespace WarOfFoxesAndRabbits
 {
     public class Cell
     {
-
         private Vector2 position;
 
         public Texture2D texture2d;
@@ -26,22 +25,6 @@ namespace WarOfFoxesAndRabbits
             this.graphicsDevice = graphicsDevice;
 
             grass = new Random().Next(0, 3);
-
-            // randomly spawn a rabbit
-
-            inhabitant = new Random().Next(0, 50) == 1 ? new Rabbit() : null;
-        }
-
-        // If we want to change the cell's color, we need to call this first
-        public void setTexture()
-        {
-            Color[] data = new Color[GameVariables.cellSize * GameVariables.cellSize];
-
-            for (int i = 0; i < data.Length; ++i)
-                data[i] = Color;
-
-            texture2d = new Texture2D(graphicsDevice, GameVariables.cellSize, GameVariables.cellSize);
-            texture2d.SetData(data);
         }
 
         public void Grow()
@@ -54,7 +37,6 @@ namespace WarOfFoxesAndRabbits
 
         public double Grass { get => grass; }
 
-
         public void grassEaten()
         {
             if (grass<=1)
@@ -65,7 +47,6 @@ namespace WarOfFoxesAndRabbits
             {
                 grass--;
             }
-            
         }
 
         public Vector2 Position { get => position; }
@@ -81,7 +62,6 @@ namespace WarOfFoxesAndRabbits
                     {
                         case > 0 and < 1:
                             return new Color(130, 200, 0);
-                            //return new Color(0, 0, 0);
                         case >= 1 and < 2:
                             return new Color(111, 183, 0);
                         case >= 2:
@@ -95,7 +75,5 @@ namespace WarOfFoxesAndRabbits
                 return Color.Black;
             }
         }
-
-        
     }
 }
