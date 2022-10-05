@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Formats.Asn1;
+using System.Runtime.InteropServices;
 
 namespace WarOfFoxesAndRabbits
 {
     class Rabbit : Animal
     {
         protected new const int maxSate = 5;
+
         public Rabbit()
         {
             Color = new Color(255, 255, 255);
@@ -16,17 +19,9 @@ namespace WarOfFoxesAndRabbits
             sate++;
         }
 
-        public override bool Die()
-        {
-            if (Sate == 0)
-                return true;
-            else
-                return false;
-        }
         public override void Update()
         {
             sate--;
         }
-        
     }
 }

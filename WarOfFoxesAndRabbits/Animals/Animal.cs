@@ -11,6 +11,7 @@ namespace WarOfFoxesAndRabbits
         public Color Color;
 
         public bool hasMoved = false;
+        public bool hasProduced = false;
 
         public int Sate
         {
@@ -27,7 +28,7 @@ namespace WarOfFoxesAndRabbits
 
         public virtual bool Die()
         {
-            if (Sate == 0)
+            if (Sate <= 0)
                 return true;
             else
                 return false;

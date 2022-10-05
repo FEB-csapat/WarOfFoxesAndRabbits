@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace WarOfFoxesAndRabbits
 {
@@ -21,8 +22,8 @@ namespace WarOfFoxesAndRabbits
             Window.AllowUserResizing = true;
 
             // this two line limits the fps to 30
-            //   this.IsFixedTimeStep = true;//false;
-            //   this.TargetElapsedTime = TimeSpan.FromSeconds(1d/2d ); //60);
+               this.IsFixedTimeStep = true;//false;
+               this.TargetElapsedTime = TimeSpan.FromSeconds(1d/4d ); //60);
         }
 
         protected override void Initialize()
