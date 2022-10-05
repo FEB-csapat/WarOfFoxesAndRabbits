@@ -9,6 +9,7 @@ namespace WarOfFoxesAndRabbits
         public Rabbit()
         {
             Color = new Color(255,255,255);
+            sate = 1;
         }
 
         public void Eat()
@@ -18,7 +19,8 @@ namespace WarOfFoxesAndRabbits
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            sate--;
+            //throw new NotImplementedException();
         }
     }
 }

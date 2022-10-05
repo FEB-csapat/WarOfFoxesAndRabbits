@@ -8,6 +8,7 @@ namespace WarOfFoxesAndRabbits
     {
         static public Cell[,] Check( Cell[,] field, int x, int y)
         {
+            
             if (!field[x, y].inhabitant.hasMoved) {
                 // rules
 
@@ -36,7 +37,7 @@ namespace WarOfFoxesAndRabbits
                             {
                                 if (field[x + px, y + py].inhabitant==null)
                                 {
-                                  //  System.Diagnostics.Debug.WriteLine("Adding surroundings: x: y: " + (x + px) + " " + (y  + py)) ;
+                                    //System.Diagnostics.Debug.WriteLine("Adding surroundings: x: y: " + (x + px) + " " + (y  + py)) ;
                                     surroundingCells.Add(field[x + px, y + py]);
                                 }                            
                             }
@@ -48,22 +49,24 @@ namespace WarOfFoxesAndRabbits
                     // todo: shuffle list
                     if (surroundingCells.Count != 0)
                     {
-                        surroundingCells.OrderByDescending(e => e.Grass);
+                        List<Cell> optionalCells = surroundingCells.Where(x => x.Grass == surroundingCells.Max(y => y.Grass)).ToList();
 
-                        surroundingCells[0].inhabitant = field[x, y].inhabitant;
+                        int ran = new Random().Next(0, optionalCells.Count);
+
+                        optionalCells[ran].inhabitant = field[x, y].inhabitant;
                         field[x, y].inhabitant = null;
 
-                        field[x, y].setTexture();
-                        surroundingCells[0].setTexture();
+                        //field[x, y].setTexture();
+                        //optionalCells[ran].setTexture();
 
-                        surroundingCells[0].inhabitant.hasMoved = true;
+                        optionalCells[ran].inhabitant.hasMoved = true;
                     }
 
                    
                 }
                 
             }
-
+            field[x, y].Update();
             return field;
         }
 
