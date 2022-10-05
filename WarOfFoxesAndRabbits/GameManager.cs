@@ -30,11 +30,13 @@ namespace WarOfFoxesAndRabbits
                         {
 
                             if (y + py >= 0 && x + px >= 0
-                            && y + py <= GameVariables.cellsVerticallyCount && x + px <= GameVariables.cellsHorizontallyCount
-                            && (px != 0 && py != 0) 
-                            && field[x + px, y + py].inhabitant == null )
+                            && y + py < GameVariables.cellsVerticallyCount && x + px < GameVariables.cellsHorizontallyCount
+                            && (px != 0 && py != 0))
                             {
-                                surroundingCells.Add( field[x + px, y + py]);
+                                if (field[x + px, y + py].inhabitant==null)
+                                {
+                                    surroundingCells.Add(field[x + px, y + py]);
+                                }                            
                             }
                         }
                     }
@@ -44,15 +46,16 @@ namespace WarOfFoxesAndRabbits
                     {
                         surroundingCells.OrderByDescending(e => e.Grass);
 
-                        field[x, y].inhabitant = surroundingCells[0].inhabitant;
-                        surroundingCells[0].inhabitant = null;
+                        surroundingCells[0].inhabitant = field[x, y].inhabitant;
+                        field[x, y].inhabitant = null;
 
                         field[x, y].setTexture();
                         surroundingCells[0].setTexture();
+
+                        surroundingCells[0].inhabitant.hasMoved = true;
                     }
 
-                    field[x, y].inhabitant.hasMoved = true;
-
+                   
                 }
                 
             }

@@ -8,7 +8,7 @@ namespace WarOfFoxesAndRabbits
         protected new const int maxSate = 5;
         public Rabbit()
         {
-            Color = new Color(102,102,102);
+            Color = new Color(255,255,255);
         }
 
         public override void Eat(int grass)

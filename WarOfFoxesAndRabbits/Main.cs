@@ -58,6 +58,7 @@ namespace WarOfFoxesAndRabbits
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+            System.Diagnostics.Debug.WriteLine("update");
         }
 
         protected override void Draw(GameTime gameTime)
