@@ -12,7 +12,10 @@ namespace WarOfFoxesAndRabbits
 
         public bool hasMoved = false;
 
-        public int Sate { get {
+        public int Sate
+        {
+            get
+            {
                 return sate;
             }
         }

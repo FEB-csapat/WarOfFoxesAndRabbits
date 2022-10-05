@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 
 namespace WarOfFoxesAndRabbits
 {
@@ -8,7 +7,7 @@ namespace WarOfFoxesAndRabbits
         protected new const int maxSate = 5;
         public Rabbit()
         {
-            Color = new Color(255,255,255);
+            Color = new Color(255, 255, 255);
             sate = 1;
         }
 
@@ -20,7 +19,6 @@ namespace WarOfFoxesAndRabbits
         public override void Update()
         {
             sate--;
-            //throw new NotImplementedException();
         }
     }
 }

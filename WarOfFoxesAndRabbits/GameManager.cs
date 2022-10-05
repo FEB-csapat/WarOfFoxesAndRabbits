@@ -6,10 +6,11 @@ namespace WarOfFoxesAndRabbits
 {
     class RabbitHandler
     {
-        static public Cell[,] Check( Cell[,] field, int x, int y)
+        static public Cell[,] Check(Cell[,] field, int x, int y)
         {
-            
-            if (!field[x, y].inhabitant.hasMoved) {
+
+            if (!field[x, y].inhabitant.hasMoved)
+            {
                 // rules
 
                 // TODO: If sate=4 cannot eat grass:2
@@ -35,18 +36,15 @@ namespace WarOfFoxesAndRabbits
                             && y + py < GameVariables.cellsVerticallyCount && x + px < GameVariables.cellsHorizontallyCount
                             && (px != 0 && py != 0))
                             {
-                                if (field[x + px, y + py].inhabitant==null)
+                                if (field[x + px, y + py].inhabitant == null)
                                 {
-                                    //System.Diagnostics.Debug.WriteLine("Adding surroundings: x: y: " + (x + px) + " " + (y  + py)) ;
                                     surroundingCells.Add(field[x + px, y + py]);
-                                }                            
+                                }
                             }
 
                         }
                     }
 
-
-                    // todo: shuffle list
                     if (surroundingCells.Count != 0)
                     {
                         List<Cell> optionalCells = surroundingCells.Where(x => x.Grass == surroundingCells.Max(y => y.Grass)).ToList();
@@ -55,16 +53,9 @@ namespace WarOfFoxesAndRabbits
 
                         optionalCells[ran].inhabitant = field[x, y].inhabitant;
                         field[x, y].inhabitant = null;
-
-                        //field[x, y].setTexture();
-                        //optionalCells[ran].setTexture();
-
                         optionalCells[ran].inhabitant.hasMoved = true;
                     }
-
-                   
                 }
-                
             }
             field[x, y].Update();
             return field;
@@ -97,7 +88,7 @@ namespace WarOfFoxesAndRabbits
         // returns the modified field
         public static Cell[,] Update(Cell[,] field)
         {
-            
+
             for (int y = 0; y < field.GetLength(0); y++)
             {
                 for (int x = 0; x < field.GetLength(1); x++)
@@ -121,7 +112,7 @@ namespace WarOfFoxesAndRabbits
                     {
                         field[x, y].Grow();
                     }
-                    
+
                 }
             }
 
@@ -130,10 +121,10 @@ namespace WarOfFoxesAndRabbits
             {
                 for (int x = 0; x < field.GetLength(1); x++)
                 {
-                    if(field[x, y].inhabitant != null)
+                    if (field[x, y].inhabitant != null)
                         field[x, y].inhabitant.hasMoved = false;
 
-                    
+
                 }
             }
 

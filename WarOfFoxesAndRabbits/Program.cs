@@ -1,6 +1,3 @@
-﻿
-using WarOfFoxesAndRabbits;
-
-using var game = new WarOfFoxesAndRabbits.Main();
+﻿using var game = new WarOfFoxesAndRabbits.Main();
 
 game.Run();

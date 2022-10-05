@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
-using System.Runtime.CompilerServices;
 
 
 namespace WarOfFoxesAndRabbits
@@ -16,7 +14,7 @@ namespace WarOfFoxesAndRabbits
 
         private GraphicsDevice graphicsDevice;
 
-        
+
         private int grass = 0;
 
         // the cell's 'inhabitant'. Can be Rabbit or Fox
@@ -27,11 +25,7 @@ namespace WarOfFoxesAndRabbits
             this.position = position;
             this.graphicsDevice = graphicsDevice;
 
-
-
-            //setTexture();
-
-            grass = new Random().Next(0,3);
+            grass = new Random().Next(0, 3);
 
             // randomly spawn a rabbit
             inhabitant = new Random().Next(0, 10) == 1 ? new Rabbit() : null;
@@ -49,15 +43,6 @@ namespace WarOfFoxesAndRabbits
             texture2d.SetData(data);
         }
 
-        //public void asdasd() {
-        //    Color[] data = new Color[GameVariables.cellSize * GameVariables.cellSize];
-
-        //    for (int i = 0; i < data.Length; ++i)
-        //        data[i] = Color;
-        //    texture2d.SetData<Color>(data);
-
-        //        }
-
         public void Grow()
         {
             if (grass < 2)
@@ -71,12 +56,15 @@ namespace WarOfFoxesAndRabbits
 
         public void grassEaten()
         {
-            grass-=2;
+            grass -= 2;
         }
 
         public Vector2 Position { get => position; }
 
-        public Color Color { get {
+        public Color Color
+        {
+            get
+            {
                 if (inhabitant == null)
                 {
                     switch (grass)
