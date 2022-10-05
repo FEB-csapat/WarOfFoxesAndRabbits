@@ -7,8 +7,10 @@ namespace WarOfFoxesAndRabbits
     public abstract class Animal
     {
         protected int sate;
-        protected readonly int maxSate;
+        protected int maxSate;
         public Color Color;
+
+        public bool hasMoved = false;
 
         public int Sate { get {
                 return sate;
@@ -20,8 +22,11 @@ namespace WarOfFoxesAndRabbits
             sate += food;
         }
 
-        // Minden ami egy generáció alatt történik, az az updateban kell legyen. pl: Lépés, evés, szaporodás
-        public abstract void Update();
+        // Minden ami egy generáció alatt történik, az az updateban kell legyen. pl: evés, szaporodás
+        public virtual void Update()
+        {
+            sate--;
+        }
 
     }
 }

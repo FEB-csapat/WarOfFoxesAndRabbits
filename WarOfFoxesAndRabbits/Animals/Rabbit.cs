@@ -5,7 +5,7 @@ namespace WarOfFoxesAndRabbits
 {
     class Rabbit : Animal
     {
-        
+        protected new const int maxSate = 5;
         public Rabbit()
         {
             Color = new Color(102,102,102);

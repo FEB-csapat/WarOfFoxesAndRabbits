@@ -11,7 +11,7 @@ namespace WarOfFoxesAndRabbits
         private SpriteBatch _spriteBatch;
 
 
-        GrassCell[,] field = new GrassCell[GameVariables.cellsHorizontallyCount, GameVariables.cellsVerticallyCount];
+        Cell[,] field = new Cell[GameVariables.cellsHorizontallyCount, GameVariables.cellsVerticallyCount];
 
         public Main()
         {
@@ -40,7 +40,7 @@ namespace WarOfFoxesAndRabbits
             {
                 for (int x = 0; x < GameVariables.cellsVerticallyCount; x++)
                 {
-                    field[x, y] = new GrassCell(new Vector2(x * GameVariables.cellSize, y * GameVariables.cellSize), GraphicsDevice);
+                    field[x, y] = new Cell(new Vector2(x * GameVariables.cellSize, y * GameVariables.cellSize), GraphicsDevice);
 
                 }
             }
@@ -73,7 +73,6 @@ namespace WarOfFoxesAndRabbits
                 {
                     _spriteBatch.Begin();
                     _spriteBatch.Draw(field[x,y].texture2d, field[x, y].Position, field[x,y].Color);
-
                     _spriteBatch.End();
                 }
             }
