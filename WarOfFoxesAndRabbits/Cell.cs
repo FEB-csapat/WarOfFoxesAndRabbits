@@ -49,6 +49,15 @@ namespace WarOfFoxesAndRabbits
             texture2d.SetData(data);
         }
 
+        public void asdasd() {
+            Color[] data = new Color[GameVariables.cellSize * GameVariables.cellSize];
+
+            for (int i = 0; i < data.Length; ++i)
+                data[i] = Color;
+            texture2d.SetData<Color>(data);
+
+                }
+
         public void Grow()
         {
             if (grass<2)

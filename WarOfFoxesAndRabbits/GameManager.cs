@@ -121,6 +121,8 @@ namespace WarOfFoxesAndRabbits
                 {
                     if(field[x, y].inhabitant != null)
                         field[x, y].inhabitant.hasMoved = false;
+
+                    
                 }
             }
 
