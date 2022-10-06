@@ -11,6 +11,7 @@ namespace WarOfFoxesAndRabbits
         public Color Color;
 
         public bool hasMoved = false;
+        public bool hasProduced = false;
 
         public int Sate
         {
@@ -23,6 +24,14 @@ namespace WarOfFoxesAndRabbits
         public virtual void Eat(int food)
         {
             sate += food;
+        }
+
+        public virtual bool Die()
+        {
+            if (Sate <= 0)
+                return true;
+            else
+                return false;
         }
 
         // Minden ami egy generáció alatt történik, az az updateban kell legyen. pl: evés, szaporodás

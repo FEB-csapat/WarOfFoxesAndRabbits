@@ -7,7 +7,6 @@ namespace WarOfFoxesAndRabbits
 {
     public class Cell
     {
-
         private Vector2 position;
 
         public Texture2D texture2d;
@@ -15,7 +14,7 @@ namespace WarOfFoxesAndRabbits
         private GraphicsDevice graphicsDevice;
 
 
-        private int grass = 0;
+        private double grass = 0;
 
         // the cell's 'inhabitant'. Can be Rabbit or Fox
         public Animal inhabitant;
@@ -26,37 +25,28 @@ namespace WarOfFoxesAndRabbits
             this.graphicsDevice = graphicsDevice;
 
             grass = new Random().Next(0, 3);
-
-            // randomly spawn a rabbit
-            inhabitant = new Random().Next(0, 10) == 1 ? new Rabbit() : null;
-        }
-
-        // If we want to change the cell's color, we need to call this first
-        public void setTexture()
-        {
-            Color[] data = new Color[GameVariables.cellSize * GameVariables.cellSize];
-
-            for (int i = 0; i < data.Length; ++i)
-                data[i] = Color;
-
-            texture2d = new Texture2D(graphicsDevice, GameVariables.cellSize, GameVariables.cellSize);
-            texture2d.SetData(data);
         }
 
         public void Grow()
         {
             if (grass < 2)
             {
-                grass++;
+                grass+=0.2;
             }
         }
 
-        public int Grass { get => grass; }
-
+        public double Grass { get => grass; }
 
         public void grassEaten()
         {
-            grass -= 2;
+            if (grass<=1)
+            {
+                grass = 0;
+            }
+            else
+            {
+                grass--;
+            }
         }
 
         public Vector2 Position { get => position; }
@@ -67,13 +57,14 @@ namespace WarOfFoxesAndRabbits
             {
                 if (inhabitant == null)
                 {
+                    
                     switch (grass)
                     {
-                        case 0:
+                        case > 0 and < 1:
                             return new Color(130, 200, 0);
-                        case 1:
+                        case >= 1 and < 2:
                             return new Color(111, 183, 0);
-                        case 2:
+                        case >= 2:
                             return new Color(0, 183, 0);
                     }
                 }
@@ -83,12 +74,6 @@ namespace WarOfFoxesAndRabbits
                 }
                 return Color.Black;
             }
-        }
-
-        public void Update()
-        {
-            inhabitant?.Update();
-            Grow();
         }
     }
 }
