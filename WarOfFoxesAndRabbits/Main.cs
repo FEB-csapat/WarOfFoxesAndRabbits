@@ -56,6 +56,7 @@ namespace WarOfFoxesAndRabbits
 
             spriteFont = Content.Load<SpriteFont>("Fonts/Arial");
 
+            // TODO: Generation counter resets with clear button
             generationLabel = new Label("Generation: " + generation, new Vector2(GameVariables.GetGameCanvasWidth() + 50, 4));
             components.Add(generationLabel);
 

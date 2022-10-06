@@ -43,7 +43,7 @@ namespace WarOfFoxesAndRabbits
 
                             if (y + py >= 0 && x + px >= 0
                             && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
-                            && (px != 0 && py != 0))
+                            && (px != 0 || py != 0))
                             {
                                 // Check cells to move
                                 if (field[x + px, y + py].inhabitant == null)
@@ -98,6 +98,10 @@ namespace WarOfFoxesAndRabbits
             }
             return field;
         }
+    }
+    class FoxHandler
+    {
+
     }
 
     // Manages the game's rules
