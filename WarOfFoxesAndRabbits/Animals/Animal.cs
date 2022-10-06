@@ -8,6 +8,8 @@ namespace WarOfFoxesAndRabbits
     {
         protected int sate;
         protected int maxSate;
+        protected int age;
+        protected int maxAge;
         public Color Color;
 
         public bool hasMoved = false;
@@ -21,23 +23,27 @@ namespace WarOfFoxesAndRabbits
             }
         }
 
+        public int Age
+        {
+            get
+            {
+                return age;
+            }
+        }
+
         public virtual void Eat(int food)
         {
             sate += food;
         }
 
-        public virtual bool Die()
-        {
-            if (Sate <= 0)
-                return true;
-            else
-                return false;
-        }
+        public virtual bool IsDead() => Sate <= 0 || age >= maxAge;
+
 
         // Minden ami egy generáció alatt történik, az az updateban kell legyen. pl: evés, szaporodás
         public virtual void Update()
         {
             sate--;
+            age++;
         }
 
     }

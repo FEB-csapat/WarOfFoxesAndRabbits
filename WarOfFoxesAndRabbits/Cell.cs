@@ -31,7 +31,7 @@ namespace WarOfFoxesAndRabbits
         {
             if (grass < 2)
             {
-                grass+=0.2;
+                grass += 0.2;
             }
         }
 
@@ -39,7 +39,7 @@ namespace WarOfFoxesAndRabbits
 
         public void grassEaten()
         {
-            if (grass<=1)
+            if (grass <= 1)
             {
                 grass = 0;
             }
@@ -57,7 +57,7 @@ namespace WarOfFoxesAndRabbits
             {
                 if (inhabitant == null)
                 {
-                    
+
                     switch (grass)
                     {
                         case > 0 and < 1:
