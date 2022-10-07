@@ -220,6 +220,10 @@ namespace WarOfFoxesAndRabbits
                                     {
                                         field[x, y].inhabitant = new Rabbit();
                                     }
+                                    else if(brushSelected == BrushType.FOX)
+                                    {
+                                        field[x, y].inhabitant = new Fox();
+                                    }
                                 }
                             }
                         }
