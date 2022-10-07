@@ -4,9 +4,9 @@ namespace WarOfFoxesAndRabbits
 {
     public class GameVariables
     {
-        public static int CellsHorizontallyCount = 150;
-        public static int CellsVerticallyCount = 150;
-        public static int CellSize = 4;
+        public static int CellsHorizontallyCount = 200;
+        public static int CellsVerticallyCount = 200;
+        public static int CellSize = 3;
 
 
         public static int WindowWidth = CellsVerticallyCount * CellSize + 400;

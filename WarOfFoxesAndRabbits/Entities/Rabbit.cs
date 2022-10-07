@@ -5,27 +5,13 @@ namespace WarOfFoxesAndRabbits
     {
         public Rabbit()
         {
-           // System.Diagnostics.Debug.WriteLine("rabbit created");
             sate = 3;
             age = 0;
             maxSate = 5;
-            maxAge = 35;
+            maxAge = 30;
         }
 
-        Color color =  new Color(255, 255, 255);
-        public Rabbit(Color color)
-        {
-          //  System.Diagnostics.Debug.WriteLine("rabbit created");
-            sate = 1;
-            age = 0;
-            maxSate = 5;
-            maxAge = 35;
-
-            this.color = color;
-            
-        }
-
-        public override Color Color => color;
+        public override Color Color => Color.White;
 
         public override void Eat(int amount)
         {
@@ -40,6 +26,5 @@ namespace WarOfFoxesAndRabbits
             sate--;
             age++;
         }
-
     }
 }

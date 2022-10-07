@@ -1,8 +1,4 @@
-﻿
-
-using Microsoft.Xna.Framework;
-
-namespace WarOfFoxesAndRabbits
+﻿namespace WarOfFoxesAndRabbits
 {
     public abstract class Animal : Entity
     {
@@ -10,7 +6,7 @@ namespace WarOfFoxesAndRabbits
         protected int maxSate;
         protected int age;
         protected int maxAge;
-        
+
 
         public bool hasMoved = false;
         public bool hasProduced = false;
@@ -33,7 +29,7 @@ namespace WarOfFoxesAndRabbits
 
         public abstract void Eat(int amount);
 
-        public virtual bool IsDead() =>  Sate <= 0 || age >= maxAge;
+        public virtual bool IsDead() => Sate <= 0 || age >= maxAge;
 
 
         // Minden ami egy generáció alatt történik, az az updateban kell legyen. pl: evés, szaporodás

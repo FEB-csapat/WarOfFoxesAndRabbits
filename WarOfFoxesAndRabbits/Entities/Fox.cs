@@ -7,7 +7,7 @@ namespace WarOfFoxesAndRabbits
 
         public Fox()
         {
-            
+
             sate = 4;
             age = 0;
 

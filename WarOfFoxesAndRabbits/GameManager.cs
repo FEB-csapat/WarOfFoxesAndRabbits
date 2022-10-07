@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +8,7 @@ namespace WarOfFoxesAndRabbits
     {
         static public Cell[,] Check(Cell[,] field, int x, int y)
         {
-            Rabbit rabbitOnCurrentCell = (Rabbit) field[x, y].animal;
+            Rabbit rabbitOnCurrentCell = (Rabbit)field[x, y].animal;
 
             // Rabbit dies
             if (rabbitOnCurrentCell.IsDead())
@@ -24,7 +23,7 @@ namespace WarOfFoxesAndRabbits
                 // rules
                 if (field[x, y].matter is Grass)
                 {
-                    Grass grass = (Grass) field[x, y].matter;
+                    Grass grass = (Grass)field[x, y].matter;
 
                     if (grass.Stage >= 1 && rabbitOnCurrentCell.Sate < 5)
                     {
@@ -43,10 +42,11 @@ namespace WarOfFoxesAndRabbits
                             grass.grassEaten();
                         }
                     }
-                    if (grass.Stage< 1)
+                    if (grass.Stage < 1)
                     {
-
                         List<Cell> surroundingCellsToMove = new List<Cell>();
+
+                        List<Cell> surroundingCellsToMoveWater = new List<Cell>();
 
                         Rabbit fatherRabbit = null;
 
@@ -54,16 +54,21 @@ namespace WarOfFoxesAndRabbits
                         {
                             for (int px = -1; px <= 1; px++)
                             {
-
                                 if (y + py >= 0 && x + px >= 0
                                 && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
                                 && (px != 0 || py != 0))
                                 {
                                     // Check cells to move
-                                    if (field[x + px, y + py].animal == null
-                                    || field[x + px, y + py].matter is Water)
+                                    if (field[x + px, y + py].animal == null)
                                     {
-                                        surroundingCellsToMove.Add(field[x + px, y + py]);
+                                        if (field[x + px, y + py].matter is Water)
+                                        {
+                                            surroundingCellsToMoveWater.Add(field[x + px, y + py]);
+                                        }
+                                        else if (field[x + px, y + py].matter is Grass)
+                                        {
+                                            surroundingCellsToMove.Add(field[x + px, y + py]);
+                                        }
                                     }
 
                                     // Check mates to mate with
@@ -75,7 +80,6 @@ namespace WarOfFoxesAndRabbits
                                     {
                                         if (((Rabbit)field[x + px, y + py].animal).Sate >= 4)
                                         {
-                                        //    System.Diagnostics.Debug.WriteLine("father found");
                                             fatherRabbit = (Rabbit)field[x + px, y + py].animal;
                                         }
                                     }
@@ -89,12 +93,9 @@ namespace WarOfFoxesAndRabbits
                             if (fatherRabbit != null)
                             {
                                 int r = new Random().Next(0, surroundingCellsToMove.Count);
-                              //  field[surroundingCellsToMove[r].cellX, surroundingCellsToMove[r].cellY].animal = new Rabbit(Color.Red);
                                 surroundingCellsToMove[r].animal = new Rabbit();
-                                //   surroundingCellsToMove[r] = new Cell();
-                                // field[5,5].animal = new Rabbit(Color.Red);
                                 surroundingCellsToMove.RemoveAt(r);
-                                
+
                                 fatherRabbit.hasProduced = true;
                                 rabbitOnCurrentCell.hasProduced = true;
                             }
@@ -102,7 +103,6 @@ namespace WarOfFoxesAndRabbits
                             // Move rabbit to cell with best grass on it
                             if (surroundingCellsToMove.Count != 0)
                             {
-                                // TODO: rewrite this
                                 List<Cell> optionalCells = new List<Cell>();
                                 bool hasWaterCell = false;
 
@@ -112,11 +112,17 @@ namespace WarOfFoxesAndRabbits
                                 {
                                     if (cell.matter is Water && !hasWaterCell)
                                     {
-                                        hasWaterCell = true;
-                                        
+                                        hasWaterCell = false;
+                                        optionalCells.Add(cell); ;
                                     }
-                                    optionalCells.Add(cell);
+
+                                    if (cell.matter is Grass && ((Grass)cell.matter).Stage >= bestGrassStage)
+                                    {
+                                        optionalCells.Add(cell); ;
+                                    }
                                 }
+
+                                optionalCells.AddRange(surroundingCellsToMoveWater);
 
                                 int ran = new Random().Next(0, optionalCells.Count);
 
@@ -128,7 +134,7 @@ namespace WarOfFoxesAndRabbits
                         }
                     }
                 }
-                
+
             }
             return field;
         }
@@ -165,11 +171,11 @@ namespace WarOfFoxesAndRabbits
                     {
                         field[x, y].animal.Update();
                     }
-                    else if(field[x, y].matter is Grass)
+                    else if (field[x, y].matter is Grass)
                     {
                         ((Grass)field[x, y].matter).Grow();
                     }
-                    
+
                 }
             }
 
@@ -178,7 +184,7 @@ namespace WarOfFoxesAndRabbits
             {
                 for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)
                 {
-                    if (field[x, y].animal != null && field[x,y].animal is Animal)
+                    if (field[x, y].animal != null && field[x, y].animal is Animal)
                     {
                         ((Animal)field[x, y].animal).hasMoved = false;
                         ((Animal)field[x, y].animal).hasProduced = false;

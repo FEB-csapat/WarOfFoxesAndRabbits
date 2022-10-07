@@ -15,7 +15,7 @@ namespace WarOfFoxesAndRabbits
 
         Cell[,] field = new Cell[GameVariables.CellsHorizontallyCount, GameVariables.CellsVerticallyCount];
 
-        List<Component> components = new List<Component>();
+        readonly List<Component> components = new List<Component>();
 
         SpriteFont spriteFont;
 
@@ -183,20 +183,19 @@ namespace WarOfFoxesAndRabbits
                         {
                             field[x, y].animal = null;
                         }
-                       
+
                     }
                 }
             }, text: "Clear", width: 150, height: 50);
             components.Add(clearButton);
 
-            
+
 
             // Label to count foxes and rabbits
             foxLabel = new Label("Number of rabbits: " + 0, new Vector2(GameVariables.GetGameCanvasWidth() + 50, 330));
             components.Add(foxLabel);
             rabbitLabel = new Label("Number of rabbits: " + 0, new Vector2(GameVariables.GetGameCanvasWidth() + 50, 350));
             components.Add(rabbitLabel);
-
 
             #endregion
 
@@ -216,7 +215,6 @@ namespace WarOfFoxesAndRabbits
                 noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2S);
                 noise.SetSeed(new Random().Next(0, 1000000));
             }
-            
 
             for (int y = 0; y < GameVariables.CellsVerticallyCount; y++)
             {
@@ -229,7 +227,7 @@ namespace WarOfFoxesAndRabbits
                         hasWater = true;
                     }
 
-                    field[x, y] = new Cell(new Vector2(x * GameVariables.CellSize, y * GameVariables.CellSize), x,y, matter: hasWater ? new Water() : null);
+                    field[x, y] = new Cell(new Vector2(x * GameVariables.CellSize, y * GameVariables.CellSize), matter: hasWater ? new Water() : null);
                 }
             }
         }
@@ -300,10 +298,12 @@ namespace WarOfFoxesAndRabbits
                                     if (pencilSelected == PencilType.BUNNY)
                                     {
                                         field[x, y].animal = new Rabbit();
-                                    }else if (pencilSelected == PencilType.FOX)
+                                    }
+                                    else if (pencilSelected == PencilType.FOX)
                                     {
                                         field[x, y].animal = new Fox();
-                                    }else if (pencilSelected == PencilType.WALL)
+                                    }
+                                    else if (pencilSelected == PencilType.WALL)
                                     {
                                         field[x, y].matter = new Wall();
                                     }
