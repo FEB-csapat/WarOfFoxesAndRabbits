@@ -20,15 +20,23 @@ namespace WarOfFoxesAndRabbits
             if (!field[x, y].inhabitant.hasMoved)
             {
                 // rules
-
-                // TODO: If sate=4 cannot eat grass that's value is2
                 if (field[x, y].Grass >= 1 && field[x, y].inhabitant.Sate < 5)
                 {
-                    (field[x, y].inhabitant as Rabbit).Eat();
-                    field[x, y].grassEaten();
+                    if (field[x, y].Grass == 2 && field[x, y].inhabitant.Sate < 4)
+                    {
+                        (field[x, y].inhabitant as Rabbit).Eat(2);
+                        field[x, y].grassEaten();
+                    }
+                    else if (field[x, y].Grass == 2 && field[x, y].inhabitant.Sate >= 4)
+                    {
+                        //Can't eat sate too high!
+                    }
+                    else
+                    {
+                        (field[x, y].inhabitant as Rabbit).Eat(1);
+                        field[x, y].grassEaten();
+                    }
                 }
-
-
                 if (field[x, y].Grass < 1)
                 {
 
@@ -53,7 +61,7 @@ namespace WarOfFoxesAndRabbits
 
                                 // Check mates to mate with
                                 if (fatherRabbit == null
-                                && field[x, y].inhabitant.Sate >= 4
+                                && field[x, y].inhabitant.Sate == 5
                                 && field[x + px, y + py].inhabitant != null
                                 && field[x + px, y + py].inhabitant.GetType() == typeof(Rabbit)
                                 && !field[x + px, y + py].inhabitant.hasProduced)
