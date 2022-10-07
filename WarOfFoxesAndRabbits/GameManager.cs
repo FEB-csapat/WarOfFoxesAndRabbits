@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,101 +9,126 @@ namespace WarOfFoxesAndRabbits
     {
         static public Cell[,] Check(Cell[,] field, int x, int y)
         {
+            Rabbit rabbitOnCurrentCell = (Rabbit) field[x, y].animal;
 
             // Rabbit dies
-            if (field[x, y].inhabitant.IsDead())
+            if (rabbitOnCurrentCell.IsDead())
             {
-                field[x, y].inhabitant = null;
+                field[x, y].animal = null;
                 return field;
             }
 
 
-            if (!field[x, y].inhabitant.hasMoved)
+            if (!rabbitOnCurrentCell.hasMoved)
             {
                 // rules
-                if (field[x, y].Grass >= 1 && field[x, y].inhabitant.Sate < 5)
+                if (field[x, y].matter is Grass)
                 {
-                    if (field[x, y].Grass == 2 && field[x, y].inhabitant.Sate < 4)
-                    {
-                        (field[x, y].inhabitant as Rabbit).Eat(2);
-                        field[x, y].grassEaten();
-                    }
-                    else if (field[x, y].Grass == 2 && field[x, y].inhabitant.Sate >= 4)
-                    {
-                        //Can't eat sate too high!
-                    }
-                    else
-                    {
-                        (field[x, y].inhabitant as Rabbit).Eat(1);
-                        field[x, y].grassEaten();
-                    }
-                }
-                if (field[x, y].Grass < 1)
-                {
+                    Grass grass = (Grass) field[x, y].matter;
 
-                    List<Cell> surroundingCellsToMove = new List<Cell>();
-
-                    Rabbit fatherRabbit = null;
-
-                    for (int py = -1; py <= 1; py++)
+                    if (grass.Stage >= 1 && rabbitOnCurrentCell.Sate < 5)
                     {
-                        for (int px = -1; px <= 1; px++)
+                        if (grass.Stage == 2 && rabbitOnCurrentCell.Sate < 4)
                         {
+                            (field[x, y].animal as Rabbit).Eat(2);
+                            grass.grassEaten();
+                        }
+                        else if (grass.Stage == 2 && rabbitOnCurrentCell.Sate >= 4)
+                        {
+                            //Can't eat sate too high!
+                        }
+                        else
+                        {
+                            (field[x, y].animal as Rabbit).Eat(1);
+                            grass.grassEaten();
+                        }
+                    }
+                    if (grass.Stage< 1)
+                    {
 
-                            if (y + py >= 0 && x + px >= 0
-                            && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
-                            && (px != 0 || py != 0))
+                        List<Cell> surroundingCellsToMove = new List<Cell>();
+
+                        Rabbit fatherRabbit = null;
+
+                        for (int py = -1; py <= 1; py++)
+                        {
+                            for (int px = -1; px <= 1; px++)
                             {
-                                // Check cells to move
-                                if (field[x + px, y + py].inhabitant == null)
-                                {
-                                    surroundingCellsToMove.Add(field[x + px, y + py]);
-                                }
 
-                                // Check mates to mate with
-                                if (fatherRabbit == null
-                                && field[x, y].inhabitant.Sate == 5
-                                && field[x + px, y + py].inhabitant != null
-                                && field[x + px, y + py].inhabitant.GetType() == typeof(Rabbit)
-                                && !field[x + px, y + py].inhabitant.hasProduced)
+                                if (y + py >= 0 && x + px >= 0
+                                && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
+                                && (px != 0 || py != 0))
                                 {
-                                    if (field[x + px, y + py].inhabitant.Sate >= 4)
+                                    // Check cells to move
+                                    if (field[x + px, y + py].animal == null
+                                    || field[x + px, y + py].matter is Water)
                                     {
-                                        fatherRabbit = (Rabbit)field[x + px, y + py].inhabitant;
+                                        surroundingCellsToMove.Add(field[x + px, y + py]);
+                                    }
+
+                                    // Check mates to mate with
+                                    if (fatherRabbit == null
+                                    && rabbitOnCurrentCell.Sate == 5
+                                    && field[x + px, y + py].animal != null
+                                    && field[x + px, y + py].animal.GetType() == typeof(Rabbit)
+                                    && !((Rabbit)field[x + px, y + py].animal).hasProduced)
+                                    {
+                                        if (((Rabbit)field[x + px, y + py].animal).Sate >= 4)
+                                        {
+                                        //    System.Diagnostics.Debug.WriteLine("father found");
+                                            fatherRabbit = (Rabbit)field[x + px, y + py].animal;
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    if (surroundingCellsToMove.Count != 0)
-                    {
-                        // Birth rabbit to empty cell
-                        if (fatherRabbit != null)
-                        {
-
-                            int r = new Random().Next(0, surroundingCellsToMove.Count);
-                            surroundingCellsToMove[r].inhabitant = new Rabbit();
-                            surroundingCellsToMove.RemoveAt(r);
-
-                            fatherRabbit.hasProduced = true;
-                            field[x, y].inhabitant.hasProduced = true;
-                        }
-
-                        // Move rabbit to cell with best grass on it
                         if (surroundingCellsToMove.Count != 0)
                         {
-                            List<Cell> optionalCells = surroundingCellsToMove.Where(x => x.Grass == surroundingCellsToMove.Max(y => y.Grass)).ToList();
+                            // Birth rabbit to empty cell
+                            if (fatherRabbit != null)
+                            {
+                                int r = new Random().Next(0, surroundingCellsToMove.Count);
+                              //  field[surroundingCellsToMove[r].cellX, surroundingCellsToMove[r].cellY].animal = new Rabbit(Color.Red);
+                                surroundingCellsToMove[r].animal = new Rabbit();
+                                //   surroundingCellsToMove[r] = new Cell();
+                                // field[5,5].animal = new Rabbit(Color.Red);
+                                surroundingCellsToMove.RemoveAt(r);
+                                
+                                fatherRabbit.hasProduced = true;
+                                rabbitOnCurrentCell.hasProduced = true;
+                            }
 
-                            int ran = new Random().Next(0, optionalCells.Count);
+                            // Move rabbit to cell with best grass on it
+                            if (surroundingCellsToMove.Count != 0)
+                            {
+                                // TODO: rewrite this
+                                List<Cell> optionalCells = new List<Cell>();
+                                bool hasWaterCell = false;
 
-                            optionalCells[ran].inhabitant = field[x, y].inhabitant;
-                            field[x, y].inhabitant = null;
-                            optionalCells[ran].inhabitant.hasMoved = true;
+                                // TODO: sometimes throws exception
+                                double bestGrassStage = Math.Floor(surroundingCellsToMove.Where(x => x.matter is Grass).Max(y => ((Grass)y.matter).Stage));
+                                foreach (Cell cell in surroundingCellsToMove)
+                                {
+                                    if (cell.matter is Water && !hasWaterCell)
+                                    {
+                                        hasWaterCell = true;
+                                        
+                                    }
+                                    optionalCells.Add(cell);
+                                }
+
+                                int ran = new Random().Next(0, optionalCells.Count);
+
+                                optionalCells[ran].animal = field[x, y].animal;
+                                field[x, y].animal = null;
+                                ((Rabbit)optionalCells[ran].animal).hasMoved = true;
+                            }
+
                         }
-
                     }
                 }
+                
             }
             return field;
         }
@@ -122,24 +148,28 @@ namespace WarOfFoxesAndRabbits
             {
                 for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)
                 {
-                    if (field[x, y].inhabitant != null)
+                    if (field[x, y].animal != null)
                     {
-                        if (field[x, y].inhabitant is Rabbit)
+                        if (field[x, y].animal is Rabbit)
                         {
                             field = RabbitHandler.Check(field, x, y);
 
                         }
-                        else if (field[x, y].inhabitant is Fox)
+                        else if (field[x, y].animal is Fox)
                         {
                             // TODO: implement FoxHandler
                         }
                     }
 
-                    field[x, y].inhabitant?.Update();
-                    if (field[x, y].inhabitant == null)
+                    if (field[x, y].animal != null)
                     {
-                        field[x, y].Grow();
+                        field[x, y].animal.Update();
                     }
+                    else if(field[x, y].matter is Grass)
+                    {
+                        ((Grass)field[x, y].matter).Grow();
+                    }
+                    
                 }
             }
 
@@ -148,10 +178,10 @@ namespace WarOfFoxesAndRabbits
             {
                 for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)
                 {
-                    if (field[x, y].inhabitant != null)
+                    if (field[x, y].animal != null && field[x,y].animal is Animal)
                     {
-                        field[x, y].inhabitant.hasMoved = false;
-                        field[x, y].inhabitant.hasProduced = false;
+                        ((Animal)field[x, y].animal).hasMoved = false;
+                        ((Animal)field[x, y].animal).hasProduced = false;
                     }
                 }
             }

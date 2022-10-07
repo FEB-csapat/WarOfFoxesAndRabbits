@@ -2,14 +2,14 @@
 {
     public static class InhabintantCounter
     {
-        public static int CountInhabitants(this Cell[,] field)
+        public static int CountAnimals(this Cell[,] field)
         {
             int counter = 0;
             for (int y = 0; y < GameVariables.CellsVerticallyCount; y++)
             {
                 for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)
                 {
-                    if (field[x, y].inhabitant != null)
+                    if (field[x, y].animal != null && field[x, y].animal is Animal)
                     {
                         counter++;
                     }
@@ -25,7 +25,7 @@
             {
                 for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)
                 {
-                    if (field[x, y].inhabitant != null && field[x, y].inhabitant.GetType() == typeof(Rabbit))
+                    if (field[x, y].animal != null && field[x, y].animal.GetType() == typeof(Rabbit))
                     {
                         counter++;
                     }
@@ -41,7 +41,7 @@
             {
                 for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)
                 {
-                    if (field[x, y].inhabitant != null && field[x, y].inhabitant.GetType() == typeof(Fox))
+                    if (field[x, y].animal != null && field[x, y].animal.GetType() == typeof(Fox))
                     {
                         counter++;
                     }

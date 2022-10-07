@@ -9,44 +9,32 @@ namespace WarOfFoxesAndRabbits
     {
         private Vector2 position;
 
+        public int cellX, cellY;
+
         public Texture2D texture2d;
 
-        private GraphicsDevice graphicsDevice;
-
-
-        private double grass = 0;
 
         // the cell's 'inhabitant'. Can be Rabbit or Fox
-        public Animal inhabitant;
+        public Animal animal;
 
-        public Cell(Vector2 position, GraphicsDevice graphicsDevice)
+        public Matter matter;
+
+
+        public Cell(Vector2 position, int cellX, int cellY, Matter matter = null, Animal animal = null )
         {
             this.position = position;
-            this.graphicsDevice = graphicsDevice;
-
-            grass = new Random().Next(0, 3);
-        }
-
-        public void Grow()
-        {
-            if (grass < 2)
+            this.cellX = cellX;
+            this.cellY = cellY;
+            if (matter == null)
             {
-                grass += 0.02;
-            }
-        }
-
-        public double Grass { get => grass; }
-
-        public void grassEaten()
-        {
-            if (grass <= 1)
-            {
-                grass = 0;
+                this.matter = new Grass();
             }
             else
             {
-                grass--;
+                this.matter = matter;
             }
+            this.animal = animal;
+            
         }
 
         public Vector2 Position { get => position; }
@@ -55,24 +43,14 @@ namespace WarOfFoxesAndRabbits
         {
             get
             {
-                if (inhabitant == null)
+                if (animal == null)
                 {
-
-                    switch (grass)
-                    {
-                        case > 0 and < 1:
-                            return new Color(130, 200, 0);
-                        case >= 1 and < 2:
-                            return new Color(111, 183, 0);
-                        case >= 2:
-                            return new Color(0, 183, 0);
-                    }
+                    return matter.Color;
                 }
-                else if (inhabitant != null)
-                {
-                    return inhabitant.Color;
+                else
+                { 
+                    return animal.Color;
                 }
-                return Color.Black;
             }
         }
     }

@@ -9,7 +9,7 @@ namespace WarOfFoxesAndRabbits
         public static int CellSize = 4;
 
 
-        public static int WindowWidth = CellsVerticallyCount * CellSize + 250;
+        public static int WindowWidth = CellsVerticallyCount * CellSize + 400;
         public static int WindowHeight = CellsVerticallyCount * CellSize;
 
 

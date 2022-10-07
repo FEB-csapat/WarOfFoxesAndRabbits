@@ -1,7 +1,7 @@
 ﻿namespace WarOfFoxesAndRabbits
 {
-    enum BrushType
+    enum PencilType
     {
-        NONE, BUNNY, FOX
+        NONE, BUNNY, FOX, WALL, WATER
     }
 }
