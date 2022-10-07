@@ -31,7 +31,7 @@ namespace WarOfFoxesAndRabbits
         {
             if (grass < 2)
             {
-                grass += 0.2;
+                grass += 0.02;
             }
         }
 
