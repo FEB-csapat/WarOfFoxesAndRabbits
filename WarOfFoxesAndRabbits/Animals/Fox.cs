@@ -9,6 +9,11 @@ namespace WarOfFoxesAndRabbits
         public Fox()
         {
             Color = Color.Red;
+            sate = 4;
+            age = 0;
+
+            maxSate = 10;
+            maxAge = 30;
         }
 
         // eats rabbit
@@ -19,7 +24,8 @@ namespace WarOfFoxesAndRabbits
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            sate--;
+            age++;
         }
     }
 }

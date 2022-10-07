@@ -8,7 +8,9 @@ namespace WarOfFoxesAndRabbits
     {
         static public Cell[,] Check(Cell[,] field, int x, int y)
         {
-            if (field[x,y].inhabitant.Die())
+
+            // Rabbit dies
+            if (field[x, y].inhabitant.IsDead())
             {
                 field[x, y].inhabitant = null;
                 return field;
@@ -26,7 +28,7 @@ namespace WarOfFoxesAndRabbits
                     field[x, y].grassEaten();
                 }
 
-                
+
                 if (field[x, y].Grass < 1)
                 {
 
@@ -38,10 +40,10 @@ namespace WarOfFoxesAndRabbits
                     {
                         for (int px = -1; px <= 1; px++)
                         {
-                            
+
                             if (y + py >= 0 && x + px >= 0
-                            && y + py < GameVariables.cellsVerticallyCount && x + px < GameVariables.cellsHorizontallyCount
-                            && (px != 0 && py != 0))
+                            && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
+                            && (px != 0 || py != 0))
                             {
                                 // Check cells to move
                                 if (field[x + px, y + py].inhabitant == null)
@@ -50,13 +52,13 @@ namespace WarOfFoxesAndRabbits
                                 }
 
                                 // Check mates to mate with
-                                if (fatherRabbit == null 
+                                if (fatherRabbit == null
                                 && field[x, y].inhabitant.Sate >= 4
                                 && field[x + px, y + py].inhabitant != null
                                 && field[x + px, y + py].inhabitant.GetType() == typeof(Rabbit)
                                 && !field[x + px, y + py].inhabitant.hasProduced)
                                 {
-                                    if (field[x + px, y + py].inhabitant.Sate >=4)
+                                    if (field[x + px, y + py].inhabitant.Sate >= 4)
                                     {
                                         fatherRabbit = (Rabbit)field[x + px, y + py].inhabitant;
                                     }
@@ -70,7 +72,7 @@ namespace WarOfFoxesAndRabbits
                         // Birth rabbit to empty cell
                         if (fatherRabbit != null)
                         {
-                            
+
                             int r = new Random().Next(0, surroundingCellsToMove.Count);
                             surroundingCellsToMove[r].inhabitant = new Rabbit();
                             surroundingCellsToMove.RemoveAt(r);
@@ -90,12 +92,16 @@ namespace WarOfFoxesAndRabbits
                             field[x, y].inhabitant = null;
                             optionalCells[ran].inhabitant.hasMoved = true;
                         }
-                        
+
                     }
                 }
             }
             return field;
         }
+    }
+    class FoxHandler
+    {
+
     }
 
     // Manages the game's rules
@@ -104,9 +110,9 @@ namespace WarOfFoxesAndRabbits
         // Modify the fields according to the rules
         public static Cell[,] Update(Cell[,] field)
         {
-            for (int y = 0; y < GameVariables.cellsVerticallyCount; y++)
+            for (int y = 0; y < GameVariables.CellsVerticallyCount; y++)
             {
-                for (int x = 0; x < GameVariables.cellsHorizontallyCount; x++)
+                for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)
                 {
                     if (field[x, y].inhabitant != null)
                     {
@@ -130,9 +136,9 @@ namespace WarOfFoxesAndRabbits
             }
 
 
-            for (int y = 0; y < GameVariables.cellsVerticallyCount; y++)
+            for (int y = 0; y < GameVariables.CellsVerticallyCount; y++)
             {
-                for (int x = 0; x < GameVariables.cellsHorizontallyCount; x++)
+                for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)
                 {
                     if (field[x, y].inhabitant != null)
                     {
