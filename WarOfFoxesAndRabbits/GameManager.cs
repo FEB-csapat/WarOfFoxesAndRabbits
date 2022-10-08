@@ -17,7 +17,6 @@ namespace WarOfFoxesAndRabbits
                 return field;
             }
 
-
             if (!rabbitOnCurrentCell.hasMoved)
             {
                 // rules
@@ -92,7 +91,7 @@ namespace WarOfFoxesAndRabbits
                             // Birth rabbit to empty cell
                             if (fatherRabbit != null)
                             {
-                                int r = new Random().Next(0, surroundingCellsToMove.Count);
+                                int r = GameVariables.Random.Next(0, surroundingCellsToMove.Count);
                                 surroundingCellsToMove[r].animal = new Rabbit();
                                 surroundingCellsToMove.RemoveAt(r);
 
@@ -124,7 +123,7 @@ namespace WarOfFoxesAndRabbits
 
                                 optionalCells.AddRange(surroundingCellsToMoveWater);
 
-                                int ran = new Random().Next(0, optionalCells.Count);
+                                int ran = GameVariables.Random.Next(0, optionalCells.Count);
 
                                 optionalCells[ran].animal = field[x, y].animal;
                                 field[x, y].animal = null;
@@ -139,6 +138,8 @@ namespace WarOfFoxesAndRabbits
             return field;
         }
     }
+
+    // TODO: implement FoxHandler
     class FoxHandler
     {
 

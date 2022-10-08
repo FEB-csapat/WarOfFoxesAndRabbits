@@ -1,21 +1,25 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 
 namespace WarOfFoxesAndRabbits
 {
     public class Grass : Matter
     {
         private double stage = 0;
+        private double maxStage = 2;
         public Grass()
         {
-            stage = new Random().Next(0, 3);
+            stage = GameVariables.Random.Next(0, 3);
         }
 
         public void Grow()
         {
-            if (stage < 2)
+            if (stage < maxStage)
             {
                 stage += 0.02;
+            }
+            if (stage >= maxStage)
+            {
+                stage = maxStage;
             }
         }
         public double Stage { get => stage; }
@@ -36,6 +40,8 @@ namespace WarOfFoxesAndRabbits
         {
             get
             {
+                return mapColor();
+                /*
                 switch (Stage)
                 {
                     case > 0 and < 1:
@@ -46,7 +52,18 @@ namespace WarOfFoxesAndRabbits
                         return new Color(0, 183, 0);
                 }
                 return Color.Black;
+                */
             }
+        }
+
+        // Maps the color to the stage of grass
+        private Color mapColor()
+        {
+            double c = maxStage - stage;
+
+            double p = c / maxStage;
+
+            return new Color(((int)((162 - 36) * p + 36)), ((int)((186 - 112) * p + 112)), ((int)((57 - 31) * p + 31)));
         }
     }
 }

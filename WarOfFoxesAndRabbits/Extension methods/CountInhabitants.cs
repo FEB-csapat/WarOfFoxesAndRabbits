@@ -1,5 +1,6 @@
 ﻿namespace WarOfFoxesAndRabbits
 {
+    // Extension class
     public static class InhabintantCounter
     {
         public static int CountAnimals(this Cell[,] field)

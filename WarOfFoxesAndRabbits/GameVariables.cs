@@ -1,9 +1,11 @@
-﻿
+﻿using System;
 
 namespace WarOfFoxesAndRabbits
 {
-    public class GameVariables
+    public static class GameVariables
     {
+        public static Random Random = new Random();
+
         public static int CellsHorizontallyCount = 200;
         public static int CellsVerticallyCount = 200;
         public static int CellSize = 3;

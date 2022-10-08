@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 
 namespace WarOfFoxesAndRabbits
@@ -10,22 +9,19 @@ namespace WarOfFoxesAndRabbits
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
         Texture2D rectangleBlock;
+        SpriteFont spriteFont;
+
 
         Cell[,] field = new Cell[GameVariables.CellsHorizontallyCount, GameVariables.CellsVerticallyCount];
 
-        readonly List<Component> components = new List<Component>();
-
-        SpriteFont spriteFont;
-
         MouseState previousMouseState;
 
-        static bool paused = false;
-
+        bool paused = false;
         bool enabledLakes = false;
 
         // Variables for components
+        readonly List<Component> components = new List<Component>();
         Label generationLabel;
         int generation = 0;
         Label foxLabel;
@@ -213,7 +209,7 @@ namespace WarOfFoxesAndRabbits
             if (enabledLakes)
             {
                 noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2S);
-                noise.SetSeed(new Random().Next(0, 1000000));
+                noise.SetSeed(GameVariables.Random.Next(0, 1000000));
             }
 
             for (int y = 0; y < GameVariables.CellsVerticallyCount; y++)
@@ -295,21 +291,20 @@ namespace WarOfFoxesAndRabbits
                             {
                                 if (field[x, y].animal == null)
                                 {
-                                    if (pencilSelected == PencilType.BUNNY)
+                                    switch (pencilSelected)
                                     {
-                                        field[x, y].animal = new Rabbit();
-                                    }
-                                    else if (pencilSelected == PencilType.FOX)
-                                    {
-                                        field[x, y].animal = new Fox();
-                                    }
-                                    else if (pencilSelected == PencilType.WALL)
-                                    {
-                                        field[x, y].matter = new Wall();
-                                    }
-                                    else if (pencilSelected == PencilType.WATER)
-                                    {
-                                        field[x, y].matter = new Water();
+                                        case PencilType.BUNNY:
+                                            field[x, y].animal = new Rabbit();
+                                            break;
+                                        case PencilType.FOX:
+                                            field[x, y].animal = new Fox();
+                                            break;
+                                        case PencilType.WALL:
+                                            field[x, y].matter = new Wall();
+                                            break;
+                                        case PencilType.WATER:
+                                            field[x, y].matter = new Water();
+                                            break;
                                     }
                                 }
                             }
@@ -321,8 +316,6 @@ namespace WarOfFoxesAndRabbits
 
             base.Update(gameTime);
         }
-
-
 
         protected override void Draw(GameTime gameTime)
         {

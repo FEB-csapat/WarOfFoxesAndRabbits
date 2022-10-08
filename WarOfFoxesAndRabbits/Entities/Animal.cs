@@ -11,21 +11,9 @@
         public bool hasMoved = false;
         public bool hasProduced = false;
 
-        public int Sate
-        {
-            get
-            {
-                return sate;
-            }
-        }
+        public int Sate => sate;
 
-        public int Age
-        {
-            get
-            {
-                return age;
-            }
-        }
+        public int Age => age;
 
         public abstract void Eat(int amount);
 
@@ -38,6 +26,5 @@
             sate--;
             age++;
         }
-
     }
 }
