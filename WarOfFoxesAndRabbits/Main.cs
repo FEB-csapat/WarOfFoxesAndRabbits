@@ -306,6 +306,10 @@ namespace WarOfFoxesAndRabbits
                                             field[x, y].matter = new Water();
                                             break;
                                     }
+                                    else if(brushSelected == BrushType.FOX)
+                                    {
+                                        field[x, y].inhabitant = new Fox();
+                                    }
                                 }
                             }
                         }
