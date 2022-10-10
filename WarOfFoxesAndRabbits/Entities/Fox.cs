@@ -7,20 +7,23 @@ namespace WarOfFoxesAndRabbits
 
         public Fox()
         {
-
-            sate = 4;
+            sate = 7;
             age = 0;
 
             maxSate = 10;
-            maxAge = 30;
+            maxAge = 45;
         }
+
 
         public override Color Color => Color.Red;
 
         // eats rabbit
         public void Eat()
         {
-            sate += 3;
+            if (sate < maxSate)
+            {
+                sate += 3;
+            }
         }
 
         public override void Eat(int food)
@@ -33,5 +36,7 @@ namespace WarOfFoxesAndRabbits
             sate--;
             age++;
         }
+
+
     }
 }

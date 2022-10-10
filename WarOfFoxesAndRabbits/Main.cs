@@ -117,6 +117,7 @@ namespace WarOfFoxesAndRabbits
             }, text: "-", width: 50, height: 50));
 
             // Button to draw animals on the field
+
             Button rabbitPencil = new Button();
             Button foxPencil = new Button();
             Button wallPencil = new Button();
@@ -135,11 +136,13 @@ namespace WarOfFoxesAndRabbits
             // Fox pencil
             foxPencil = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 270), () =>
             {
+
                 pencilSelected = PencilType.FOX;
                 rabbitPencil.isSelected = false;
                 foxPencil.isSelected = true;
                 wallPencil.isSelected = false;
                 waterPencil.isSelected = false;
+
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Fox"), width: 50, height: 50);
             components.Add(foxPencil);
@@ -223,7 +226,7 @@ namespace WarOfFoxesAndRabbits
                         hasWater = true;
                     }
 
-                    field[x, y] = new Cell(new Vector2(x * GameVariables.CellSize, y * GameVariables.CellSize), matter: hasWater ? new Water() : null);
+                    field[x, y] = new Cell(x, y, matter: hasWater ? new Water() : null);
                 }
             }
         }
@@ -278,6 +281,7 @@ namespace WarOfFoxesAndRabbits
 
             // Mouse being held
             if (pencilSelected != PencilType.NONE)
+
             {
                 if (currentMouseState.LeftButton == ButtonState.Pressed)
                 {
@@ -285,8 +289,8 @@ namespace WarOfFoxesAndRabbits
                     {
                         for (int x = 0; x < GameVariables.CellsVerticallyCount; x++)
                         {
-                            if (currentMouseState.X >= field[x, y].Position.X && currentMouseState.X <= field[x, y].Position.X + GameVariables.CellSize
-                            && currentMouseState.Y >= field[x, y].Position.Y && currentMouseState.Y <= field[x, y].Position.Y + GameVariables.CellSize
+                            if (currentMouseState.X >= field[x, y].posX * GameVariables.CellSize && currentMouseState.X <= field[x, y].posX * GameVariables.CellSize + GameVariables.CellSize
+                            && currentMouseState.Y >= field[x, y].posY * GameVariables.CellSize && currentMouseState.Y <= field[x, y].posY * GameVariables.CellSize + GameVariables.CellSize
                             )
                             {
                                 if (field[x, y].animal == null)
@@ -305,10 +309,6 @@ namespace WarOfFoxesAndRabbits
                                         case PencilType.WATER:
                                             field[x, y].matter = new Water();
                                             break;
-                                    }
-                                    else if(brushSelected == BrushType.FOX)
-                                    {
-                                        field[x, y].inhabitant = new Fox();
                                     }
                                 }
                             }

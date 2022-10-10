@@ -6,19 +6,21 @@ namespace WarOfFoxesAndRabbits
 {
     public class Cell
     {
-        private Vector2 position;
+        //private Vector2 position;
 
 
         public Texture2D texture2d;
 
+
+        public int posX;
+        public int posY;
         // the cell's 'inhabitant'. Can be Rabbit or Fox
         public Animal animal;
-
         public Matter matter;
-
-        public Cell(Vector2 position, Matter matter = null, Animal animal = null)
+        public Cell(int posX, int posY, Matter matter = null, Animal animal = null)
         {
-            this.position = position;
+            //this.position = position;
+            
             if (matter == null)
             {
                 this.matter = new Grass();
@@ -29,9 +31,11 @@ namespace WarOfFoxesAndRabbits
             }
             this.animal = animal;
 
+            this.posX = posX;
+            this.posY = posY;
         }
 
-        public Vector2 Position { get => position; }
+        //public Vector2 Position { get => position; }
 
         public Color Color
         {
