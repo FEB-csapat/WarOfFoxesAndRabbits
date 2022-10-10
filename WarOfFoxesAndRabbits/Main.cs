@@ -122,6 +122,7 @@ namespace WarOfFoxesAndRabbits
             Button foxPencil = new Button();
             Button wallPencil = new Button();
             Button waterPencil = new Button();
+            Button grassPencil = new Button();
             rabbitPencil = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 210), () =>
             {
                 pencilSelected = PencilType.BUNNY;
@@ -129,6 +130,7 @@ namespace WarOfFoxesAndRabbits
                 foxPencil.isSelected = false;
                 wallPencil.isSelected = false;
                 waterPencil.isSelected = false;
+                grassPencil.isSelected = false;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Rabbit"), width: 50, height: 50);
             components.Add(rabbitPencil);
@@ -142,7 +144,7 @@ namespace WarOfFoxesAndRabbits
                 foxPencil.isSelected = true;
                 wallPencil.isSelected = false;
                 waterPencil.isSelected = false;
-
+                grassPencil.isSelected = false;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Fox"), width: 50, height: 50);
             components.Add(foxPencil);
@@ -155,6 +157,7 @@ namespace WarOfFoxesAndRabbits
                 foxPencil.isSelected = false;
                 wallPencil.isSelected = true;
                 waterPencil.isSelected = false;
+                grassPencil.isSelected = false;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Wall"), width: 50, height: 50);
             components.Add(wallPencil);
@@ -167,9 +170,24 @@ namespace WarOfFoxesAndRabbits
                 foxPencil.isSelected = false;
                 wallPencil.isSelected = false;
                 waterPencil.isSelected = true;
+                grassPencil.isSelected = false;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Water"), width: 50, height: 50);
             components.Add(waterPencil);
+
+
+            // Grass pencil
+            grassPencil = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 170, 210), () =>
+            {
+                pencilSelected = PencilType.GRASS;
+                rabbitPencil.isSelected = false;
+                foxPencil.isSelected = false;
+                wallPencil.isSelected = false;
+                waterPencil.isSelected = false;
+                grassPencil.isSelected = true;
+                // Icon from https://icons8.com
+            }, image: Content.Load<Texture2D>("Images/Grass"), width: 50, height: 50);
+            components.Add(grassPencil);
 
             // Button to clear the fields from animals
             Button clearButton = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 385), () =>
@@ -221,7 +239,7 @@ namespace WarOfFoxesAndRabbits
                 {
                     bool hasWater = false;
 
-                    if (enabledLakes && noise.GetNoise(x, y) >= 0.6)
+                    if (enabledLakes && noise.GetNoise(x, y) >= 0.55)
                     {
                         hasWater = true;
                     }
@@ -308,6 +326,9 @@ namespace WarOfFoxesAndRabbits
                                             break;
                                         case PencilType.WATER:
                                             field[x, y].matter = new Water();
+                                            break;
+                                        case PencilType.GRASS:
+                                            field[x, y].matter = new Grass();
                                             break;
                                     }
                                 }

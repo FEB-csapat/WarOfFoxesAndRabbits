@@ -5,9 +5,10 @@ using System.Linq;
 
 namespace WarOfFoxesAndRabbits
 {
+
+    // TODO: refactor
     class RabbitHandler
     {
-        static Random rnd = new Random();
         static public Cell[,] Check(Cell[,] field, int x, int y)
         {
             Rabbit rabbitOnCurrentCell = (Rabbit)field[x, y].animal;
@@ -139,7 +140,7 @@ namespace WarOfFoxesAndRabbits
         }
     }
 
-    //Fox handler
+    // TODO: refactor
     class FoxHandler
     {
         static Random rnd = new Random();
