@@ -14,7 +14,7 @@ namespace WarOfFoxesAndRabbits
 
         public bool hasMoved = false;
         public bool hasProduced = false;
-
+        public bool hasAte = false;
         public int Sate
         {
             get
@@ -33,8 +33,12 @@ namespace WarOfFoxesAndRabbits
 
         public virtual void Eat(int food)
         {
-            sate += food;
+            if (sate < maxSate)
+            {
+                sate += food;
+            }
         }
+
 
         public virtual bool IsDead() => Sate <= 0 || age >= maxAge;
 

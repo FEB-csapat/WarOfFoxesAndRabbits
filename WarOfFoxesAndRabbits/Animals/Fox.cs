@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace WarOfFoxesAndRabbits
 {
@@ -9,14 +11,13 @@ namespace WarOfFoxesAndRabbits
         public Fox()
         {
             Color = Color.Red;
-            sate = 4;
+            sate = 7;
             age = 0;
 
             maxSate = 10;
-            maxAge = 30;
+            maxAge = 45;
         }
 
-        // eats rabbit
         public void Eat()
         {
             sate += 3;
@@ -27,5 +28,7 @@ namespace WarOfFoxesAndRabbits
             sate--;
             age++;
         }
+
+
     }
 }

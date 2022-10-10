@@ -2,6 +2,6 @@
 {
     enum BrushType
     {
-        NONE, BUNNY, FOX
+        NONE, BUNNY, FOX, WALL
     }
 }

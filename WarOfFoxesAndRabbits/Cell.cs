@@ -7,22 +7,27 @@ namespace WarOfFoxesAndRabbits
 {
     public class Cell
     {
-        private Vector2 position;
+        //private Vector2 position;
 
         public Texture2D texture2d;
 
         private GraphicsDevice graphicsDevice;
 
+        public int posX;
+        public int posY;
 
         private double grass = 0;
 
         // the cell's 'inhabitant'. Can be Rabbit or Fox
         public Animal inhabitant;
 
-        public Cell(Vector2 position, GraphicsDevice graphicsDevice)
+        public Cell(int posX, int posY, GraphicsDevice graphicsDevice)
         {
-            this.position = position;
+            //this.position = position;
             this.graphicsDevice = graphicsDevice;
+
+            this.posX = posX;
+            this.posY = posY;
 
             grass = new Random().Next(0, 3);
         }
@@ -31,7 +36,7 @@ namespace WarOfFoxesAndRabbits
         {
             if (grass < 2)
             {
-                grass += 0.2;
+                grass += 0.02;
             }
         }
 
@@ -49,7 +54,7 @@ namespace WarOfFoxesAndRabbits
             }
         }
 
-        public Vector2 Position { get => position; }
+        //public Vector2 Position { get => position; }
 
         public Color Color
         {

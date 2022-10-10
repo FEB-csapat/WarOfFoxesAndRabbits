@@ -97,11 +97,13 @@ namespace WarOfFoxesAndRabbits
             // Button to draw animals on the field
             Button bunnyBrush = new Button();
             Button foxBrush = new Button();
+            Button wallBrush = new Button();
             bunnyBrush = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 150), () =>
             {
                 brushSelected = BrushType.BUNNY;
                 bunnyBrush.isSelected = true;
                 foxBrush.isSelected = false;
+                wallBrush.isSelected = false;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Rabbit"), width: 50, height: 50);
             components.Add(bunnyBrush);
@@ -112,9 +114,20 @@ namespace WarOfFoxesAndRabbits
                 brushSelected = BrushType.FOX;
                 bunnyBrush.isSelected = false;
                 foxBrush.isSelected = true;
+                wallBrush.isSelected = false;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Fox"), width: 50, height: 50);
             components.Add(foxBrush);
+
+            wallBrush = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 130, 190), () =>
+            {
+                brushSelected = BrushType.WALL;
+                bunnyBrush.isSelected = false;
+                foxBrush.isSelected = false;
+                wallBrush.isSelected = true;
+                // Icon from https://icons8.com
+            }, image: Content.Load<Texture2D>("Images/Fox"), width: 50, height: 50);
+            components.Add(wallBrush);
 
             // Button to empty the fields from animals
             Button emptyButton = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 270), () =>
@@ -148,7 +161,7 @@ namespace WarOfFoxesAndRabbits
             {
                 for (int x = 0; x < GameVariables.CellsVerticallyCount; x++)
                 {
-                    field[x, y] = new Cell(new Vector2(x * GameVariables.CellSize, y * GameVariables.CellSize), GraphicsDevice);
+                    field[x, y] = new Cell(x, y, GraphicsDevice);
                 }
             }
         }
@@ -201,7 +214,7 @@ namespace WarOfFoxesAndRabbits
                 }
             }
 
-            // Mouse being held
+            // Mouse being held 
             if (brushSelected == BrushType.FOX || brushSelected == BrushType.BUNNY)
             {
                 if (currentMouseState.LeftButton == ButtonState.Pressed)
@@ -210,8 +223,8 @@ namespace WarOfFoxesAndRabbits
                     {
                         for (int x = 0; x < GameVariables.CellsVerticallyCount; x++)
                         {
-                            if (currentMouseState.X >= field[x, y].Position.X && currentMouseState.X <= field[x, y].Position.X + GameVariables.CellSize
-                            && currentMouseState.Y >= field[x, y].Position.Y && currentMouseState.Y <= field[x, y].Position.Y + GameVariables.CellSize
+                            if (currentMouseState.X >= field[x, y].posX * GameVariables.CellSize && currentMouseState.X <= field[x, y].posX * GameVariables.CellSize + GameVariables.CellSize
+                            && currentMouseState.Y >= field[x, y].posY * GameVariables.CellSize && currentMouseState.Y <= field[x, y].posY * GameVariables.CellSize + GameVariables.CellSize
                             )
                             {
                                 if (field[x, y].inhabitant == null)
@@ -220,9 +233,14 @@ namespace WarOfFoxesAndRabbits
                                     {
                                         field[x, y].inhabitant = new Rabbit();
                                     }
-                                    else if(brushSelected == BrushType.FOX)
+                                    else if (brushSelected == BrushType.FOX)
                                     {
                                         field[x, y].inhabitant = new Fox();
+                                    }
+                                    //TODO: Implement walls
+                                    else if (brushSelected == BrushType.WALL)
+                                    {
+                                        //field[x, y].inhabitant = new Wall();
                                     }
                                 }
                             }
