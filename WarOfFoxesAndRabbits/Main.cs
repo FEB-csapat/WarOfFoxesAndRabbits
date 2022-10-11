@@ -116,6 +116,19 @@ namespace WarOfFoxesAndRabbits
                 }
             }, text: "-", width: 50, height: 50));
 
+            // Max tickrate
+            components.Add(new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 270, 150), () =>
+            {
+                tickrate = 59;
+                tickrateLabel.text = tickrate.ToString() + " tick";
+            }, text: "Max", width: 50, height: 50));
+            //Min tickrate
+            components.Add(new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 210, 150), () =>
+            {
+                tickrate = 1;
+                tickrateLabel.text = tickrate.ToString() + " tick";
+            }, text: "Min", width: 50, height: 50));
+
             // Button to draw animals on the field
 
             Button rabbitPencil = new Button();
