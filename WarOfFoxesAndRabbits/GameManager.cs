@@ -145,9 +145,10 @@ namespace WarOfFoxesAndRabbits
     {
         static Random rnd = new Random();
         static Cell saved;
-        private static void PossibleTileChecking(Cell[,] field, int x, int y, out List<Cell> foxSurroundingCellsToMove, out List<Cell> surroundingCellsToHunt, ref Fox fatherFox)
+        private static void PossibleTileChecking(Cell[,] field, int x, int y, out List<Cell> foxSurroundingCellsToMove, out List<Cell> foxSurroundingCellsToMoveWater, out List<Cell> surroundingCellsToHunt, ref Fox fatherFox)
         {
             foxSurroundingCellsToMove = new List<Cell>();
+            foxSurroundingCellsToMoveWater = new List<Cell>();
             surroundingCellsToHunt = new List<Cell>();
 
 
@@ -164,7 +165,7 @@ namespace WarOfFoxesAndRabbits
                         {
                             if (field[x + px, y + py].matter is Water)
                             {
-                                foxSurroundingCellsToMove.Add(field[x + px, y + py]);
+                                foxSurroundingCellsToMoveWater.Add(field[x + px, y + py]);
                             }
                             else if (field[x + px, y + py].matter is Grass)
                             {
@@ -203,13 +204,13 @@ namespace WarOfFoxesAndRabbits
             }
             if (!field[x, y].animal.hasMoved)
             {
-                List<Cell> foxSurroundingCellsToMove, surroundingCellsToHunt;
+                List<Cell> foxSurroundingCellsToMove, foxSurroundingCellsToMoveWater, surroundingCellsToHunt;
 
                 Fox fatherFox = null;
                 
 
                 //checking surrounding cells
-                PossibleTileChecking(field, x, y, out foxSurroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
+                PossibleTileChecking(field, x, y, out foxSurroundingCellsToMove, out foxSurroundingCellsToMoveWater, out surroundingCellsToHunt, ref fatherFox);
                 //First checking that in the first search are any bunnies
                 if (surroundingCellsToHunt.Count != 0) //If there are, hunt (1.step)
                 {
@@ -220,7 +221,7 @@ namespace WarOfFoxesAndRabbits
                     saved = surroundingCellsToHunt[ran];
                     field[x, y].animal = null;
                     //The original cell have been updated!
-                    PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
+                    PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out foxSurroundingCellsToMoveWater, out surroundingCellsToHunt, ref fatherFox);
                     //Second step, hunted already so just a move (2. step)
                         ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
                         field[saved.posX, saved.posY].animal.hasMoved = true;
@@ -246,7 +247,7 @@ namespace WarOfFoxesAndRabbits
                     field[x, y].animal = null;  //In this case it can have a hunt
 
 
-                    PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
+                    PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove,out foxSurroundingCellsToMoveWater, out surroundingCellsToHunt, ref fatherFox);
                     //Checking if it can hunt or not
                     if (surroundingCellsToHunt.Count != 0) //It can hunt (2. step)
                     {
