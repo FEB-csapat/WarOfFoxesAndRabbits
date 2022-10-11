@@ -13,11 +13,11 @@ namespace WarOfFoxesAndRabbits
             maxAge = 30;
 
 
-            int c = GameVariables.Random.Next(170, 255);
-            color = new Color(c, c, c);
+          //  int c = GameVariables.Random.Next(170, 255);
+          //  color = new Color(c, c, c);
         }
 
-        public override Color Color => color;
+        public override Color Color => Color.White;
 
         public override void Eat(int amount)
         {

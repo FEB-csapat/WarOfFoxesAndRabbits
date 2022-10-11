@@ -145,10 +145,12 @@ namespace WarOfFoxesAndRabbits
     {
         static Random rnd = new Random();
         static Cell saved;
-        private static void PossibleTileChecking(Cell[,] field, int x, int y, out List<Cell> foxSurroundingCellsToMove, out List<Cell> surroundingCellsToHunt)
+        private static void PossibleTileChecking(Cell[,] field, int x, int y, out List<Cell> foxSurroundingCellsToMove, out List<Cell> surroundingCellsToHunt, ref Fox fatherFox)
         {
             foxSurroundingCellsToMove = new List<Cell>();
             surroundingCellsToHunt = new List<Cell>();
+
+
             for (int py = -2; py <= 2; py++)
             {
                 for (int px = -2; px <= 2; px++)
@@ -174,6 +176,19 @@ namespace WarOfFoxesAndRabbits
                         {
                             surroundingCellsToHunt.Add(field[x + px, y + py]);
                         }
+
+                        // Check mates to mate with
+                        if (fatherFox == null
+                        && field[x,y].animal.Sate == 5
+                        && field[x + px, y + py].animal != null
+                        && field[x + px, y + py].animal.GetType() == typeof(Fox)
+                        && !field[x + px, y + py].animal.hasProduced)
+                        {
+                            if (field[x + px, y + py].animal.Sate >= 4)
+                            {
+                                fatherFox= (Fox)field[x + px, y + py].animal;
+                            }
+                        }
                     }
                 }
             }
@@ -190,8 +205,11 @@ namespace WarOfFoxesAndRabbits
             {
                 List<Cell> foxSurroundingCellsToMove, surroundingCellsToHunt;
 
+                Fox fatherFox = null;
+
+
                 //checking surrounding cells
-                PossibleTileChecking(field, x, y, out foxSurroundingCellsToMove, out surroundingCellsToHunt);
+                PossibleTileChecking(field, x, y, out foxSurroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
                 //First checking that in the first search are any bunnies
                 if (surroundingCellsToHunt.Count != 0) //If there are, hunt
                 {
@@ -202,7 +220,7 @@ namespace WarOfFoxesAndRabbits
                     saved = surroundingCellsToHunt[ran];
                     field[x, y].animal = null;
                     //The original cell have been updated!
-                    PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out surroundingCellsToHunt);
+                    PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
                     //Second step, hunted already so just a move
                     ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
                     field[saved.posX, saved.posY].animal.hasMoved = true;
@@ -212,12 +230,27 @@ namespace WarOfFoxesAndRabbits
                 }
                 else if (foxSurroundingCellsToMove.Count != 0)// Moving fox on a random cell in a 2block radius
                 {
-                    int ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
-                    foxSurroundingCellsToMove[ran].animal = field[x, y].animal;
-                    saved = foxSurroundingCellsToMove[ran];
-                    field[x, y].animal = null;  //In this case it can have a hunt
+                    // Birth fox to empty cell
+                    if (fatherFox!= null)
+                    {
+                        int r = GameVariables.Random.Next(0, foxSurroundingCellsToMove.Count);
+                        foxSurroundingCellsToMove[r].animal = new Fox();
+                        foxSurroundingCellsToMove.RemoveAt(r);
+                        fatherFox.hasProduced = true;
+                        field[x,y].animal.hasProduced = true;
+                    }
 
-                    PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out surroundingCellsToHunt);
+
+                    int ran;
+                    if (foxSurroundingCellsToMove.Count != 0)
+                    {
+                        ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
+                        foxSurroundingCellsToMove[ran].animal = field[x, y].animal;
+                        saved = foxSurroundingCellsToMove[ran];
+                        field[x, y].animal = null;  //In this case it can have a hunt
+                    }
+
+                    PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
                     //Checking if it can hunt or not
                     if (surroundingCellsToHunt.Count != 0) //It can hunt
                     {
@@ -230,14 +263,13 @@ namespace WarOfFoxesAndRabbits
                     }
                     else //It can't hunt, so it makes the second move
                     {
-                        if (!(field[saved.posX, saved.posY].matter is Wall))
+                        if (!(field[saved.posX, saved.posY].matter is Wall) && foxSurroundingCellsToMove.Count != 0)
                         {
                             ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
                             field[saved.posX, saved.posY].animal.hasMoved = true;
                             foxSurroundingCellsToMove[ran].animal = field[saved.posX, saved.posY].animal;
                             field[saved.posX, saved.posY].animal = null;
                         }
-                        
                     }
                 }
             }
@@ -291,7 +323,6 @@ namespace WarOfFoxesAndRabbits
                     }
                 }
             }
-
             return field;
         }
     }
