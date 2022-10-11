@@ -12,9 +12,12 @@ namespace WarOfFoxesAndRabbits
             maxSate = 5;
             maxAge = 30;
 
+            hasAte = true;
+            hasMoved = true;
+            hasProduced = true;
 
-          //  int c = GameVariables.Random.Next(170, 255);
-          //  color = new Color(c, c, c);
+            //  int c = GameVariables.Random.Next(170, 255);
+            //  color = new Color(c, c, c);
         }
 
         public override Color Color => Color.White;

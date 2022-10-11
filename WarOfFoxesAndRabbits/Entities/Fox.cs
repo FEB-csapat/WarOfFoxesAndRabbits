@@ -12,6 +12,10 @@ namespace WarOfFoxesAndRabbits
 
             maxSate = 10;
             maxAge = 45;
+
+            hasAte = true;
+            hasMoved = true;
+            hasProduced = true;
         }
 
 

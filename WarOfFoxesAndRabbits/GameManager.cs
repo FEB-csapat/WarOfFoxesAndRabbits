@@ -206,12 +206,12 @@ namespace WarOfFoxesAndRabbits
                 List<Cell> foxSurroundingCellsToMove, surroundingCellsToHunt;
 
                 Fox fatherFox = null;
-
+                
 
                 //checking surrounding cells
                 PossibleTileChecking(field, x, y, out foxSurroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
                 //First checking that in the first search are any bunnies
-                if (surroundingCellsToHunt.Count != 0) //If there are, hunt
+                if (surroundingCellsToHunt.Count != 0) //If there are, hunt (1.step)
                 {
                     int ran = rnd.Next(0, surroundingCellsToHunt.Count);
                     (field[x, y].animal as Fox).Eat();
@@ -221,38 +221,34 @@ namespace WarOfFoxesAndRabbits
                     field[x, y].animal = null;
                     //The original cell have been updated!
                     PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
-                    //Second step, hunted already so just a move
-                    ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
-                    field[saved.posX, saved.posY].animal.hasMoved = true;
-                    foxSurroundingCellsToMove[ran].animal = field[saved.posX, saved.posY].animal;
-                    field[saved.posX, saved.posY].animal = null;
+                    //Second step, hunted already so just a move (2. step)
+                        ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
+                        field[saved.posX, saved.posY].animal.hasMoved = true;
+                        foxSurroundingCellsToMove[ran].animal = field[saved.posX, saved.posY].animal;
+                        field[saved.posX, saved.posY].animal = null;
 
                 }
-                else if (foxSurroundingCellsToMove.Count != 0)// Moving fox on a random cell in a 2block radius
+                else if (foxSurroundingCellsToMove.Count > 1)// Moving fox on a random cell in a 2block radius (1.step)
                 {
                     // Birth fox to empty cell
                     if (fatherFox!= null)
                     {
-                        int r = GameVariables.Random.Next(0, foxSurroundingCellsToMove.Count);
+                        int r = rnd.Next(0, foxSurroundingCellsToMove.Count);
                         foxSurroundingCellsToMove[r].animal = new Fox();
                         foxSurroundingCellsToMove.RemoveAt(r);
                         fatherFox.hasProduced = true;
                         field[x,y].animal.hasProduced = true;
                     }
-
-
                     int ran;
-                    if (foxSurroundingCellsToMove.Count != 0)
-                    {
-                        ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
-                        foxSurroundingCellsToMove[ran].animal = field[x, y].animal;
-                        saved = foxSurroundingCellsToMove[ran];
-                        field[x, y].animal = null;  //In this case it can have a hunt
-                    }
+                    ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
+                    foxSurroundingCellsToMove[ran].animal = field[x, y].animal;
+                    saved = foxSurroundingCellsToMove[ran];
+                    field[x, y].animal = null;  //In this case it can have a hunt
+
 
                     PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
                     //Checking if it can hunt or not
-                    if (surroundingCellsToHunt.Count != 0) //It can hunt
+                    if (surroundingCellsToHunt.Count != 0) //It can hunt (2. step)
                     {
                         ran = rnd.Next(0, surroundingCellsToHunt.Count);
                         (field[saved.posX, saved.posY].animal as Fox).Eat();
@@ -261,7 +257,7 @@ namespace WarOfFoxesAndRabbits
                         surroundingCellsToHunt[ran].animal = field[saved.posX, saved.posY].animal; //A bunny died :(
                         field[saved.posX, saved.posY].animal = null;
                     }
-                    else //It can't hunt, so it makes the second move
+                    else //It can't hunt, so it makes the second move (2. step)
                     {
                         if (!(field[saved.posX, saved.posY].matter is Wall) && foxSurroundingCellsToMove.Count != 0)
                         {
@@ -288,8 +284,10 @@ namespace WarOfFoxesAndRabbits
                 {
                     if (field[x, y].animal != null)
                     {
+                        field[x, y].animal.Update();
                         if (field[x, y].animal is Rabbit)
                         {
+                            
                             field = RabbitHandler.Check(field, x, y);
 
                         }
@@ -297,11 +295,6 @@ namespace WarOfFoxesAndRabbits
                         {
                             field = FoxHandler.Check(field, x, y);
                         }
-                    }
-
-                    if (field[x, y].animal != null)
-                    {
-                        field[x, y].animal.Update();
                     }
                     else if (field[x, y].matter is Grass)
                     {
