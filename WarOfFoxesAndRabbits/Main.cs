@@ -203,6 +203,8 @@ namespace WarOfFoxesAndRabbits
 
                     }
                 }
+                generation = 0;
+                generationLabel.text = "Generation: " + generation;
             }, text: "Clear", width: 150, height: 50);
             components.Add(clearButton);
 
