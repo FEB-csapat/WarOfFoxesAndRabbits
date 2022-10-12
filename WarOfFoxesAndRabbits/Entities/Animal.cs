@@ -23,7 +23,8 @@
 
         public virtual bool IsDead() => Sate <= 0 || age >= maxAge;
 
-        // Minden ami egy generáció alatt történik, az az updateban kell legyen. pl: evés, szaporodás
+        public abstract bool canBreed();
+
         public virtual void Update()
         {
             sate--;

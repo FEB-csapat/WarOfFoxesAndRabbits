@@ -7,25 +7,28 @@ namespace WarOfFoxesAndRabbits
 
         public Fox()
         {
-            sate = 7;
+            sate = 18;
             age = 0;
 
-            maxSate = 10;
-            maxAge = 45;
+            maxSate = 30;
+            maxAge = 120;
 
             hasAte = true;
             hasMoved = true;
             hasProduced = true;
         }
 
-
         public override Color Color => Color.Red;
+
+        public override bool canBreed()
+        {
+            return sate >= 16;
+        }
 
         // eats rabbit
         public void Eat()
         {
-            if (sate < maxSate)
-            {
+            if (sate < maxSate){
                 sate += 3;
             }
         }
@@ -35,11 +38,13 @@ namespace WarOfFoxesAndRabbits
             throw new System.NotImplementedException();
         }
 
+
         public override void Update()
         {
             sate--;
             age++;
         }
+
 
 
     }

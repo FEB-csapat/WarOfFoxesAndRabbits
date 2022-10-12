@@ -9,8 +9,8 @@ namespace WarOfFoxesAndRabbits
         {
             sate = 3;
             age = 0;
-            maxSate = 5;
-            maxAge = 30;
+            maxSate = 9;
+            maxAge = 60;
 
             hasAte = true;
             hasMoved = true;
@@ -21,6 +21,11 @@ namespace WarOfFoxesAndRabbits
         }
 
         public override Color Color => Color.White;
+
+        public override bool canBreed()
+        {
+            return sate >= 4;
+        }
 
         public override void Eat(int amount)
         {

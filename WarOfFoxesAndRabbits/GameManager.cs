@@ -75,15 +75,13 @@ namespace WarOfFoxesAndRabbits
 
                                     // Check mates to mate with
                                     if (fatherRabbit == null
-                                    && rabbitOnCurrentCell.Sate == 5
                                     && field[x + px, y + py].animal != null
+                                    && rabbitOnCurrentCell.canBreed()
+                                    && field[x + px, y + py].animal.canBreed()
                                     && field[x + px, y + py].animal.GetType() == typeof(Rabbit)
-                                    && !((Rabbit)field[x + px, y + py].animal).hasProduced)
+                                    && !field[x + px, y + py].animal.hasProduced)
                                     {
-                                        if (((Rabbit)field[x + px, y + py].animal).Sate >= 4)
-                                        {
-                                            fatherRabbit = (Rabbit)field[x + px, y + py].animal;
-                                        }
+                                        fatherRabbit = (Rabbit)field[x + px, y + py].animal;
                                     }
                                 }
                             }
@@ -180,15 +178,13 @@ namespace WarOfFoxesAndRabbits
 
                         // Check mates to mate with
                         if (fatherFox == null
-                        && field[x,y].animal.Sate == 5
                         && field[x + px, y + py].animal != null
+                        && field[x,y].animal.canBreed()
+                        && field[x + px, y + py].animal.canBreed()
                         && field[x + px, y + py].animal.GetType() == typeof(Fox)
                         && !field[x + px, y + py].animal.hasProduced)
                         {
-                            if (field[x + px, y + py].animal.Sate >= 4)
-                            {
-                                fatherFox= (Fox)field[x + px, y + py].animal;
-                            }
+                            fatherFox= (Fox)field[x + px, y + py].animal;
                         }
                     }
                 }
@@ -207,7 +203,6 @@ namespace WarOfFoxesAndRabbits
                 List<Cell> foxSurroundingCellsToMove, foxSurroundingCellsToMoveWater, surroundingCellsToHunt;
 
                 Fox fatherFox = null;
-                
 
                 //checking surrounding cells
                 PossibleTileChecking(field, x, y, out foxSurroundingCellsToMove, out foxSurroundingCellsToMoveWater, out surroundingCellsToHunt, ref fatherFox);
@@ -231,15 +226,6 @@ namespace WarOfFoxesAndRabbits
                 }
                 else if (foxSurroundingCellsToMove.Count > 1)// Moving fox on a random cell in a 2block radius (1.step)
                 {
-                    // Birth fox to empty cell
-                    if (fatherFox!= null)
-                    {
-                        int r = rnd.Next(0, foxSurroundingCellsToMove.Count);
-                        foxSurroundingCellsToMove[r].animal = new Fox();
-                        foxSurroundingCellsToMove.RemoveAt(r);
-                        fatherFox.hasProduced = true;
-                        field[x,y].animal.hasProduced = true;
-                    }
                     int ran;
                     ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
                     foxSurroundingCellsToMove[ran].animal = field[x, y].animal;
@@ -288,9 +274,7 @@ namespace WarOfFoxesAndRabbits
                         field[x, y].animal.Update();
                         if (field[x, y].animal is Rabbit)
                         {
-                            
                             field = RabbitHandler.Check(field, x, y);
-
                         }
                         else if (field[x, y].animal is Fox)
                         {
@@ -301,7 +285,6 @@ namespace WarOfFoxesAndRabbits
                     {
                         ((Grass)field[x, y].matter).Grow();
                     }
-
                 }
             }
 
@@ -312,8 +295,8 @@ namespace WarOfFoxesAndRabbits
                 {
                     if (field[x, y].animal != null && field[x, y].animal is Animal)
                     {
-                        ((Animal)field[x, y].animal).hasMoved = false;
-                        ((Animal)field[x, y].animal).hasProduced = false;
+                        field[x, y].animal.hasMoved = false;
+                        field[x, y].animal.hasProduced = false;
                     }
                 }
             }

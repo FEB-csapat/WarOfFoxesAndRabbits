@@ -15,7 +15,7 @@ namespace WarOfFoxesAndRabbits
         {
             if (stage < maxStage)
             {
-                stage += 0.02;
+                stage += 0.06;
             }
             if (stage >= maxStage)
             {
