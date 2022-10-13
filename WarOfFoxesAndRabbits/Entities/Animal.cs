@@ -24,6 +24,7 @@
         public virtual bool IsDead() => Sate <= 0 || age >= maxAge;
 
         public abstract bool canBreed();
+        public abstract bool CanEat();
 
         public virtual void Update()
         {

@@ -26,6 +26,10 @@ namespace WarOfFoxesAndRabbits
         {
             return sate >= 4;
         }
+        public override bool CanEat()
+        {
+            return Sate < 5;
+        }
 
         public override void Eat(int amount)
         {

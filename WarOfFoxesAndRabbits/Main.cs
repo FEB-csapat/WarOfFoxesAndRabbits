@@ -27,6 +27,8 @@ namespace WarOfFoxesAndRabbits
         Label foxLabel;
         Label rabbitLabel;
 
+        Graph graph;
+
         PencilType pencilSelected = PencilType.NONE;
 
         static long tickCounter = 0;
@@ -221,13 +223,14 @@ namespace WarOfFoxesAndRabbits
             }, text: "Clear", width: 150, height: 50);
             components.Add(clearButton);
 
-
-
             // Label to count foxes and rabbits
             foxLabel = new Label("Number of rabbits: " + 0, new Vector2(GameVariables.GetGameCanvasWidth() + 50, 330));
             components.Add(foxLabel);
             rabbitLabel = new Label("Number of rabbits: " + 0, new Vector2(GameVariables.GetGameCanvasWidth() + 50, 350));
             components.Add(rabbitLabel);
+
+            graph = new Graph(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 450));
+
 
             #endregion
 
@@ -276,21 +279,40 @@ namespace WarOfFoxesAndRabbits
                 {
                     GameManager.Update(field);
                     generation++;
+
+                    // Calculations for components
+                    if (field.CountAnimals() == 0)
+                    {
+                        generation = 0;
+                    }
+                    else
+                    {
+                        generationLabel.text = "Generation: " + generation;
+                    }
+
+                    int rabbitCount = field.CountRabbits();
+                    int foxCount = field.CountFoxes();
+
+                    rabbitLabel.text = "Rabbits: " + rabbitCount;
+                    foxLabel.text = "Foxes: " + foxCount;
+
+
+                    if (rabbitCount > 0)
+                    {
+                        graph.AddData(AnimalType.RABBIT, rabbitCount);
+
+                    }
+                    if (foxCount > 0)
+                    {
+                        graph.AddData(AnimalType.FOX, foxCount);
+                    }
+
+                    graph.Update();
                 }
             }
 
-            // Calculations for labels
-            if (field.CountAnimals() == 0)
-            {
-                generation = 0;
-            }
-            else
-            {
-                generationLabel.text = "Generation: " + generation;
-            }
+            
 
-            rabbitLabel.text = "Rabbits: " + field.CountRabbits();
-            foxLabel.text = "Foxes: " + field.CountFoxes();
 
 
             MouseState currentMouseState = Mouse.GetState();
@@ -394,6 +416,19 @@ namespace WarOfFoxesAndRabbits
                     _spriteBatch.DrawString(spriteFont, ((Label)component).text, new Vector2(component.position.X, component.position.Y), Color.Black);
                 }
             }
+
+            // Draw graph
+
+            // background
+            _spriteBatch.Draw(rectangleBlock, new Rectangle((int)graph.position.X, (int)graph.position.Y, graph.width, graph.height), Color.DimGray);
+
+            System.Diagnostics.Debug.WriteLine("asd: " + graph.datas.Count);
+
+            foreach (GraphAnimalData d in graph.datas)
+            {
+                _spriteBatch.Draw(rectangleBlock, new Rectangle((int)d.position.X, (int)d.position.Y, GameVariables.GraphRectSize, GameVariables.GraphRectSize), d.Color);
+            }
+
             _spriteBatch.End();
 
             base.Draw(gameTime);

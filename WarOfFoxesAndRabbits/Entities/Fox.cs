@@ -37,6 +37,10 @@ namespace WarOfFoxesAndRabbits
         {
             throw new System.NotImplementedException();
         }
+        public override bool CanEat()
+        {
+            return Sate < 25;
+        }
 
 
         public override void Update()

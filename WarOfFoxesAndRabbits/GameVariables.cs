@@ -10,6 +10,8 @@ namespace WarOfFoxesAndRabbits
         public static int CellsVerticallyCount = 200;
         public static int CellSize = 4;
 
+        public static int GraphRectSize = 3;
+
 
         public static int WindowWidth = CellsVerticallyCount * CellSize + 400;
         public static int WindowHeight = CellsVerticallyCount * CellSize;
