@@ -213,15 +213,29 @@ namespace WarOfFoxesAndRabbits
                     (field[x, y].animal as Fox).Eat();
                     field[x, y].animal.hasAte = true;
                     surroundingCellsToHunt[ran].animal = field[x, y].animal; //A bunny died :(
-                    saved = surroundingCellsToHunt[ran];
+                    saved = surroundingCellsToHunt[ran];                   
                     field[x, y].animal = null;
-                    //The original cell have been updated!
-                    PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out foxSurroundingCellsToMoveWater, out surroundingCellsToHunt, ref fatherFox);
+
+                    if (!saved.animal.hasProduced
+                        && saved.animal.canBreed()
+                        && foxSurroundingCellsToMove.Count > 1
+                        &&fatherFox!=null)
+                        {
+                            ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
+                            foxSurroundingCellsToMove[ran].animal = new Fox();
+                            foxSurroundingCellsToMove.RemoveAt(ran);
+                            fatherFox.hasProduced = true;
+                            saved.animal.hasProduced = true;
+                        }
+                    
+                        //The original cell have been updated!
+                        PossibleTileChecking(field, saved.posX, saved.posY, out foxSurroundingCellsToMove, out foxSurroundingCellsToMoveWater, out surroundingCellsToHunt, ref fatherFox);
                     //Second step, hunted already so just a move (2. step)
                         ran = rnd.Next(0, foxSurroundingCellsToMove.Count);
                         field[saved.posX, saved.posY].animal.hasMoved = true;
                         foxSurroundingCellsToMove[ran].animal = field[saved.posX, saved.posY].animal;
-                        field[saved.posX, saved.posY].animal = null;
+                        field[saved.posX, saved.posY].animal = null;                     
+                    
 
                 }
                 else if (foxSurroundingCellsToMove.Count > 1)// Moving fox on a random cell in a 2block radius (1.step)
