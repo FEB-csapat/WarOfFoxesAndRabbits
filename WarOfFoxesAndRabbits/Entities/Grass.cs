@@ -4,35 +4,35 @@ namespace WarOfFoxesAndRabbits
 {
     public class Grass : Matter
     {
-        private double stage = 0;
-        private double maxStage = 2;
+        public double Stage { get; private set; } = 0;
+        private double MaxStage { get => 2; }
+
         public Grass()
         {
-            stage = GameVariables.Random.Next(0, 3);
+            Stage = GameVariables.Random.Next(0, 3);
         }
 
         public void Grow()
         {
-            if (stage < maxStage)
+            if (Stage < MaxStage)
             {
-                stage += 0.06;
+                Stage += 0.06;
             }
-            if (stage >= maxStage)
+            if (Stage >= MaxStage)
             {
-                stage = maxStage;
+                Stage = MaxStage;
             }
         }
-        public double Stage { get => stage; }
-
-        public void grassEaten()
+        
+        public void GrassEaten()
         {
-            if (stage <= 1)
+            if (Stage <= 1)
             {
-                stage = 0;
+                Stage = 0;
             }
             else
             {
-                stage--;
+                Stage--;
             }
         }
 
@@ -40,7 +40,7 @@ namespace WarOfFoxesAndRabbits
         {
             get
             {
-                return mapColor();
+                return MapColor();
                 /*
                 switch (Stage)
                 {
@@ -57,11 +57,11 @@ namespace WarOfFoxesAndRabbits
         }
 
         // Maps the color to the stage of grass
-        private Color mapColor()
+        private Color MapColor()
         {
-            double c = maxStage - stage;
+            double c = MaxStage - Stage;
 
-            double p = c / maxStage;
+            double p = c / MaxStage;
 
             return new Color(((int)((162 - 36) * p + 36)), ((int)((186 - 112) * p + 112)), ((int)((57 - 31) * p + 31)));
         }

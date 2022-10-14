@@ -4,25 +4,19 @@ namespace WarOfFoxesAndRabbits
 {
     public static class GameVariables
     {
-        public static Random Random = new Random();
+        public static readonly Random Random = new Random();
 
-        public static int CellsHorizontallyCount = 200;
-        public static int CellsVerticallyCount = 200;
-        public static int CellSize = 4;
+        public static readonly int CellsHorizontallyCount = 200;
+        public static readonly int CellsVerticallyCount = 200;
+        public static readonly int CellSize = 4;
 
-        public static int GraphRectSize = 3;
+        public static readonly int GraphRectSize = 3;
 
+        public static readonly int WindowWidth = CellsVerticallyCount * CellSize + 400;
+        public static readonly int WindowHeight = CellsVerticallyCount * CellSize;
 
-        public static int WindowWidth = CellsVerticallyCount * CellSize + 400;
-        public static int WindowHeight = CellsVerticallyCount * CellSize;
+        public static readonly string Title = "War of foxes and rabbits";
 
-
-        public static string Title = "War of foxes and rabbits";
-
-        public static int GetGameCanvasWidth()
-        {
-            return CellsHorizontallyCount * CellSize;
-        }
-
+        public static readonly int GameCanvasWidth = CellsHorizontallyCount * CellSize;
     }
 }

@@ -2,34 +2,25 @@
 {
     public abstract class Animal : Entity
     {
-        protected int sate;
-        protected int maxSate;
-        protected int age;
-        protected int maxAge;
+        public int Sate { get; protected set; }
+        protected int MaxSate { get; set; }
 
+        public int Age { get; protected set; }
+        protected int MaxAge { get; set; }
 
-        public bool hasMoved = false;
-        public bool hasProduced = false;
+        public bool HasMoved { get; set; } = false;
+        public bool HasProduced { get; set; } = false;
+        public bool HasAte { get; set; } = false;
 
+        public virtual bool IsDead() => Sate <= 0 || Age >= MaxAge;
 
-        public int Sate => sate;
-
-        public bool hasAte = false;
-
-
-        public int Age => age;
-
-        public abstract void Eat(int amount);
-
-        public virtual bool IsDead() => Sate <= 0 || age >= maxAge;
-
-        public abstract bool canBreed();
+        public abstract bool CanBreed();
         public abstract bool CanEat();
 
         public virtual void Update()
         {
-            sate--;
-            age++;
+            Sate--;
+            Age++;
         }
     }
 }

@@ -1,53 +1,44 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
 
 namespace WarOfFoxesAndRabbits
 {
     public class Cell
     {
-        //private Vector2 position;
+        
+        private Vector2 Position { get; set; }
 
+        public int PosX { get => (int)Position.X; }
+        public int PosY { get => (int)Position.Y; }
 
-        public Texture2D texture2d;
+        public Animal Animal { get; set;}
+        public Matter Matter{get; set;}
 
-
-        public int posX;
-        public int posY;
-        // the cell's 'inhabitant'. Can be Rabbit or Fox
-        public Animal animal;
-        public Matter matter;
-        public Cell(int posX, int posY, Matter matter = null, Animal animal = null)
+        public Cell(Vector2 position, Matter matter = null, Animal animal = null)
         {
-            //this.position = position;
+            this.Position = position;
             
             if (matter == null)
             {
-                this.matter = new Grass();
+                this.Matter = new Grass();
             }
             else
             {
-                this.matter = matter;
+                this.Matter = matter;
             }
-            this.animal = animal;
-
-            this.posX = posX;
-            this.posY = posY;
+            this.Animal = animal;
         }
-
-        //public Vector2 Position { get => position; }
 
         public Color Color
         {
             get
             {
-                if (animal == null)
+                if (Animal == null)
                 {
-                    return matter.Color;
+                    return Matter.Color;
                 }
                 else
                 {
-                    return animal.Color;
+                    return Animal.Color;
                 }
             }
         }

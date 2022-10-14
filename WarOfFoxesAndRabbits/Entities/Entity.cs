@@ -4,7 +4,6 @@ namespace WarOfFoxesAndRabbits
 {
     public abstract class Entity
     {
-
         public Entity()
         {
 

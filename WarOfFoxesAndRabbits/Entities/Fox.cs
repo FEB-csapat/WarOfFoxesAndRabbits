@@ -4,52 +4,30 @@ namespace WarOfFoxesAndRabbits
 {
     class Fox : Animal
     {
-
-        public Fox()
+        public Fox() : base()
         {
-            sate = 18;
-            age = 0;
+            Sate = 18;
+            Age = 0;
 
-            maxSate = 30;
-            maxAge = 120;
+            MaxSate = 30;
+            MaxAge = 120;
 
-            hasAte = true;
-            hasMoved = true;
-            hasProduced = true;
+            HasAte = true;
+            HasMoved = true;
+            HasProduced = true;
         }
 
         public override Color Color => Color.Red;
 
-        public override bool canBreed()
-        {
-            return sate >= 16;
-        }
+        public override bool CanBreed() => Sate >= 16;
 
-        // eats rabbit
+        public override bool CanEat() => Sate < 25;
         public void Eat()
         {
-            if (sate < maxSate){
-                sate += 3;
+            if (Sate < MaxSate)
+            {
+                Sate += 3;
             }
         }
-
-        public override void Eat(int food)
-        {
-            throw new System.NotImplementedException();
-        }
-        public override bool CanEat()
-        {
-            return Sate < 25;
-        }
-
-
-        public override void Update()
-        {
-            sate--;
-            age++;
-        }
-
-
-
     }
 }

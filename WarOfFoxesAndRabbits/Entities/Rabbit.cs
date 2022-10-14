@@ -4,38 +4,29 @@ namespace WarOfFoxesAndRabbits
 {
     class Rabbit : Animal
     {
-        private Color color;
-        public Rabbit()
+        public Rabbit() : base()
         {
-            sate = 3;
-            age = 0;
-            maxSate = 9;
-            maxAge = 60;
+            Sate = 3;
+            Age = 0;
+            MaxSate = 9;
+            MaxAge = 60;
 
-            hasAte = true;
-            hasMoved = true;
-            hasProduced = true;
-
-            //  int c = GameVariables.Random.Next(170, 255);
-            //  color = new Color(c, c, c);
+            HasAte = true;
+            HasMoved = true;
+            HasProduced = true;
         }
 
         public override Color Color => Color.White;
 
-        public override bool canBreed()
-        {
-            return sate >= 4;
-        }
-        public override bool CanEat()
-        {
-            return Sate < 5;
-        }
+        public override bool CanBreed() => Sate >= 4;
+        
+        public override bool CanEat() => Sate < 5;
 
-        public override void Eat(int amount)
+        public void Eat(int amount)
         {
-            if (sate < maxSate)
+            if (Sate < MaxSate)
             {
-                sate += amount;
+                Sate += amount;
             }
         }
     }

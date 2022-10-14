@@ -7,13 +7,13 @@ namespace WarOfFoxesAndRabbits
 {
     public class Main : Game
     {
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         Texture2D rectangleBlock;
         SpriteFont spriteFont;
 
 
-        Cell[,] field = new Cell[GameVariables.CellsHorizontallyCount, GameVariables.CellsVerticallyCount];
+        readonly Cell[,] field = new Cell[GameVariables.CellsHorizontallyCount, GameVariables.CellsVerticallyCount];
 
         MouseState previousMouseState;
 
@@ -21,7 +21,7 @@ namespace WarOfFoxesAndRabbits
         bool enabledLakes = false;
 
         // Variables for components
-        readonly List<Component> components = new List<Component>();
+        readonly List<Component> components = new();
         Label generationLabel;
         int generation = 0;
         Label foxLabel;
@@ -36,9 +36,11 @@ namespace WarOfFoxesAndRabbits
 
         public Main()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = GameVariables.WindowWidth;
-            _graphics.PreferredBackBufferHeight = GameVariables.WindowHeight;
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = GameVariables.WindowWidth,
+                PreferredBackBufferHeight = GameVariables.WindowHeight
+            };
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
@@ -58,178 +60,177 @@ namespace WarOfFoxesAndRabbits
             spriteFont = Content.Load<SpriteFont>("Fonts/Arial");
 
             // TODO: Generation counter resets with clear button
-            generationLabel = new Label("Generation: " + generation, new Vector2(GameVariables.GetGameCanvasWidth() + 50, 4));
+            generationLabel = new Label("Generation: " + generation, new Vector2(GameVariables.GameCanvasWidth + 50, 4));
             components.Add(generationLabel);
 
             // Button to regenerate the field
-            Button regenerateButton = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 30), () =>
+            Button regenerateButton = new Button(new Vector2(GameVariables.GameCanvasWidth + 50, 30), () =>
             {
-                generateField();
+                GenerateField();
             }, text: "Regenerate", width: 150, height: 50);
             components.Add(regenerateButton);
 
             // Button to enable/disable lake generation
             Button lakeSwitchButton = new Button();
-            lakeSwitchButton = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 210, 30), () =>
+            lakeSwitchButton = new Button(new Vector2(GameVariables.GameCanvasWidth + 210, 30), () =>
             {
                 enabledLakes = !enabledLakes;
                 if (enabledLakes)
                 {
-                    lakeSwitchButton.text = "Disable lake";
+                    lakeSwitchButton.Text = "Disable lake";
                 }
                 else
                 {
-                    lakeSwitchButton.text = "Enable lake";
+                    lakeSwitchButton.Text = "Enable lake";
                 }
             }, text: "Enable lake", width: 150, height: 50);
             components.Add(lakeSwitchButton);
 
             // Button to pause the game
             Button pauseButton = new Button();
-            pauseButton = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 90), () =>
+            pauseButton = new Button(new Vector2(GameVariables.GameCanvasWidth + 50, 90), () =>
             {
                 paused = !paused;
-                if (paused) pauseButton.text = "Continue";
-                else pauseButton.text = "Pause";
+                if (paused) pauseButton.Text = "Continue";
+                else pauseButton.Text = "Pause";
             }, text: "Pause", width: 150, height: 50);
             components.Add(pauseButton);
 
             // Label to show the tickrate
-            Label tickrateLabel = new Label(tickrate.ToString() + " tick", new Vector2(GameVariables.GetGameCanvasWidth() + 100, 166));
+            Label tickrateLabel = new Label(tickrate.ToString() + " tick", new Vector2(GameVariables.GameCanvasWidth + 100, 166));
             components.Add(tickrateLabel);
 
             // Increment tickrate button
-            components.Add(new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 150, 150), () =>
+            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 150, 150), () =>
             {
                 if (tickrate < 59)
                 {
                     tickrate += 2;
-                    tickrateLabel.text = tickrate.ToString() + " tick";
+                    tickrateLabel.Text = tickrate.ToString() + " tick";
                 }
             }, text: "+", width: 50, height: 50));
 
             // Decrement tickrate button
-            components.Add(new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 150), () =>
+            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 50, 150), () =>
             {
                 if (tickrate > 1)
                 {
                     tickrate -= 2;
-                    tickrateLabel.text = tickrate.ToString() + " tick";
+                    tickrateLabel.Text = tickrate.ToString() + " tick";
                 }
             }, text: "-", width: 50, height: 50));
 
             // Max tickrate
-            components.Add(new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 270, 150), () =>
+            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 270, 150), () =>
             {
                 tickrate = 59;
-                tickrateLabel.text = tickrate.ToString() + " tick";
+                tickrateLabel.Text = tickrate.ToString() + " tick";
             }, text: "Max", width: 50, height: 50));
             //Min tickrate
-            components.Add(new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 210, 150), () =>
+            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 210, 150), () =>
             {
                 tickrate = 1;
-                tickrateLabel.text = tickrate.ToString() + " tick";
+                tickrateLabel.Text = tickrate.ToString() + " tick";
             }, text: "Min", width: 50, height: 50));
 
             // Button to draw animals on the field
-
-            Button rabbitPencil = new Button();
-            Button foxPencil = new Button();
-            Button wallPencil = new Button();
-            Button waterPencil = new Button();
-            Button grassPencil = new Button();
-            rabbitPencil = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 210), () =>
+            Button rabbitPencil = new();
+            Button foxPencil = new();
+            Button wallPencil = new();
+            Button waterPencil = new();
+            Button grassPencil = new();
+            rabbitPencil = new Button(new Vector2(GameVariables.GameCanvasWidth + 50, 210), () =>
             {
                 pencilSelected = PencilType.BUNNY;
-                rabbitPencil.isSelected = true;
-                foxPencil.isSelected = false;
-                wallPencil.isSelected = false;
-                waterPencil.isSelected = false;
-                grassPencil.isSelected = false;
+                rabbitPencil.IsSelected = true;
+                foxPencil.IsSelected = false;
+                wallPencil.IsSelected = false;
+                waterPencil.IsSelected = false;
+                grassPencil.IsSelected = false;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Rabbit"), width: 50, height: 50);
             components.Add(rabbitPencil);
 
             // Fox pencil
-            foxPencil = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 270), () =>
+            foxPencil = new Button(new Vector2(GameVariables.GameCanvasWidth + 50, 270), () =>
             {
 
                 pencilSelected = PencilType.FOX;
-                rabbitPencil.isSelected = false;
-                foxPencil.isSelected = true;
-                wallPencil.isSelected = false;
-                waterPencil.isSelected = false;
-                grassPencil.isSelected = false;
+                rabbitPencil.IsSelected = false;
+                foxPencil.IsSelected = true;
+                wallPencil.IsSelected = false;
+                waterPencil.IsSelected = false;
+                grassPencil.IsSelected = false;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Fox"), width: 50, height: 50);
             components.Add(foxPencil);
 
             // Wall pencil
-            wallPencil = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 110, 210), () =>
+            wallPencil = new Button(new Vector2(GameVariables.GameCanvasWidth + 110, 210), () =>
             {
                 pencilSelected = PencilType.WALL;
-                rabbitPencil.isSelected = false;
-                foxPencil.isSelected = false;
-                wallPencil.isSelected = true;
-                waterPencil.isSelected = false;
-                grassPencil.isSelected = false;
+                rabbitPencil.IsSelected = false;
+                foxPencil.IsSelected = false;
+                wallPencil.IsSelected = true;
+                waterPencil.IsSelected = false;
+                grassPencil.IsSelected = false;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Wall"), width: 50, height: 50);
             components.Add(wallPencil);
 
             // Water pencil
-            waterPencil = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 110, 270), () =>
+            waterPencil = new Button(new Vector2(GameVariables.GameCanvasWidth + 110, 270), () =>
             {
                 pencilSelected = PencilType.WATER;
-                rabbitPencil.isSelected = false;
-                foxPencil.isSelected = false;
-                wallPencil.isSelected = false;
-                waterPencil.isSelected = true;
-                grassPencil.isSelected = false;
+                rabbitPencil.IsSelected = false;
+                foxPencil.IsSelected = false;
+                wallPencil.IsSelected = false;
+                waterPencil.IsSelected = true;
+                grassPencil.IsSelected = false;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Water"), width: 50, height: 50);
             components.Add(waterPencil);
 
 
             // Grass pencil
-            grassPencil = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 170, 210), () =>
+            grassPencil = new Button(new Vector2(GameVariables.GameCanvasWidth + 170, 210), () =>
             {
                 pencilSelected = PencilType.GRASS;
-                rabbitPencil.isSelected = false;
-                foxPencil.isSelected = false;
-                wallPencil.isSelected = false;
-                waterPencil.isSelected = false;
-                grassPencil.isSelected = true;
+                rabbitPencil.IsSelected = false;
+                foxPencil.IsSelected = false;
+                wallPencil.IsSelected = false;
+                waterPencil.IsSelected = false;
+                grassPencil.IsSelected = true;
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Grass"), width: 50, height: 50);
             components.Add(grassPencil);
 
             // Button to clear the fields from animals
-            Button clearButton = new Button(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 385), () =>
+            Button clearButton = new Button(new Vector2(GameVariables.GameCanvasWidth + 50, 385), () =>
             {
                 for (int y = 0; y < GameVariables.CellsVerticallyCount; y++)
                 {
                     for (int x = 0; x < GameVariables.CellsVerticallyCount; x++)
                     {
-                        if (field[x, y].animal is Animal)
+                        if (field[x, y].Animal is not null)
                         {
-                            field[x, y].animal = null;
+                            field[x, y].Animal = null;
                         }
 
                     }
                 }
                 generation = 0;
-                generationLabel.text = "Generation: " + generation;
+                generationLabel.Text = "Generation: " + generation;
             }, text: "Clear", width: 150, height: 50);
             components.Add(clearButton);
 
             // Label to count foxes and rabbits
-            foxLabel = new Label("Number of rabbits: " + 0, new Vector2(GameVariables.GetGameCanvasWidth() + 50, 330));
+            foxLabel = new Label("Number of rabbits: " + 0, new Vector2(GameVariables.GameCanvasWidth + 50, 330));
             components.Add(foxLabel);
-            rabbitLabel = new Label("Number of rabbits: " + 0, new Vector2(GameVariables.GetGameCanvasWidth() + 50, 350));
+            rabbitLabel = new Label("Number of rabbits: " + 0, new Vector2(GameVariables.GameCanvasWidth + 50, 350));
             components.Add(rabbitLabel);
 
-            graph = new Graph(new Vector2(GameVariables.GetGameCanvasWidth() + 50, 450));
+            graph = new Graph(new Vector2(GameVariables.GameCanvasWidth + 50, 450));
 
 
             #endregion
@@ -239,10 +240,10 @@ namespace WarOfFoxesAndRabbits
             rectangleBlock.SetData(new[] { xnaColorBorder });
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            generateField();
+            GenerateField();
         }
 
-        protected void generateField()
+        protected void GenerateField()
         {
             FastNoiseLite noise = new FastNoiseLite();
             if (enabledLakes)
@@ -262,7 +263,7 @@ namespace WarOfFoxesAndRabbits
                         hasWater = true;
                     }
 
-                    field[x, y] = new Cell(x, y, matter: hasWater ? new Water() : null);
+                    field[x, y] = new Cell(new Vector2(x,y), matter: hasWater ? new Water() : null);
                 }
             }
         }
@@ -287,14 +288,14 @@ namespace WarOfFoxesAndRabbits
                     }
                     else
                     {
-                        generationLabel.text = "Generation: " + generation;
+                        generationLabel.Text = "Generation: " + generation;
                     }
 
                     int rabbitCount = field.CountRabbits();
                     int foxCount = field.CountFoxes();
 
-                    rabbitLabel.text = "Rabbits: " + rabbitCount;
-                    foxLabel.text = "Foxes: " + foxCount;
+                    rabbitLabel.Text = "Rabbits: " + rabbitCount;
+                    foxLabel.Text = "Foxes: " + foxCount;
 
 
                     if (rabbitCount > 0)
@@ -325,8 +326,8 @@ namespace WarOfFoxesAndRabbits
                 {
                     if (component.GetType() == typeof(Button))
                     {
-                        if (currentMouseState.X >= ((Button)component).position.X && currentMouseState.X <= ((Button)component).position.X + ((Button)component).width
-                        && currentMouseState.Y >= ((Button)component).position.Y && currentMouseState.Y <= ((Button)component).position.Y + ((Button)component).height)
+                        if (currentMouseState.X >= ((Button)component).Position.X && currentMouseState.X <= ((Button)component).Position.X + ((Button)component).Width
+                        && currentMouseState.Y >= ((Button)component).Position.Y && currentMouseState.Y <= ((Button)component).Position.Y + ((Button)component).Height)
                         {
                             ((Button)component).onClick();
                         }
@@ -336,7 +337,6 @@ namespace WarOfFoxesAndRabbits
 
             // Mouse being held
             if (pencilSelected != PencilType.NONE)
-
             {
                 if (currentMouseState.LeftButton == ButtonState.Pressed)
                 {
@@ -344,28 +344,28 @@ namespace WarOfFoxesAndRabbits
                     {
                         for (int x = 0; x < GameVariables.CellsVerticallyCount; x++)
                         {
-                            if (currentMouseState.X >= field[x, y].posX * GameVariables.CellSize && currentMouseState.X <= field[x, y].posX * GameVariables.CellSize + GameVariables.CellSize
-                            && currentMouseState.Y >= field[x, y].posY * GameVariables.CellSize && currentMouseState.Y <= field[x, y].posY * GameVariables.CellSize + GameVariables.CellSize
+                            if (currentMouseState.X >= x * GameVariables.CellSize && currentMouseState.X <= x * GameVariables.CellSize + GameVariables.CellSize
+                            && currentMouseState.Y >= y * GameVariables.CellSize && currentMouseState.Y <= y * GameVariables.CellSize + GameVariables.CellSize
                             )
                             {
-                                if (field[x, y].animal == null)
+                                if (field[x, y].Animal == null)
                                 {
                                     switch (pencilSelected)
                                     {
                                         case PencilType.BUNNY:
-                                            field[x, y].animal = new Rabbit();
+                                            field[x, y].Animal = new Rabbit();
                                             break;
                                         case PencilType.FOX:
-                                            field[x, y].animal = new Fox();
+                                            field[x, y].Animal = new Fox();
                                             break;
                                         case PencilType.WALL:
-                                            field[x, y].matter = new Wall();
+                                            field[x, y].Matter = new Wall();
                                             break;
                                         case PencilType.WATER:
-                                            field[x, y].matter = new Water();
+                                            field[x, y].Matter = new Water();
                                             break;
                                         case PencilType.GRASS:
-                                            field[x, y].matter = new Grass();
+                                            field[x, y].Matter = new Grass();
                                             break;
                                     }
                                 }
@@ -395,36 +395,34 @@ namespace WarOfFoxesAndRabbits
             {
                 if (component.GetType() == typeof(Button))
                 {
-                    if (((Button)component).image != null)
+                    if (((Button)component).ImageTexture != null)
                     {
 
-                        if (((Button)component).isSelected)
+                        if (((Button)component).IsSelected)
                         {
-                            _spriteBatch.Draw(rectangleBlock, new Rectangle(((int)((Button)component).position.X) - 4, ((int)((Button)component).position.Y) - 4, ((Button)component).width + 6, ((Button)component).height + 6), Color.Black);
+                            _spriteBatch.Draw(rectangleBlock, new Rectangle(((int)((Button)component).Position.X) - 4, ((int)((Button)component).Position.Y) - 4, ((Button)component).Width + 6, ((Button)component).Height + 6), Color.Black);
                         }
-                        _spriteBatch.Draw(((Button)component).image, ((Button)component).position, Color.White);
+                        _spriteBatch.Draw(((Button)component).ImageTexture, ((Button)component).Position, Color.White);
                     }
                     else
                     {
-                        _spriteBatch.Draw(rectangleBlock, new Rectangle((int)((Button)component).position.X, (int)((Button)component).position.Y, ((Button)component).width, ((Button)component).height), Color.Gray);
+                        _spriteBatch.Draw(rectangleBlock, new Rectangle((int)((Button)component).Position.X, (int)((Button)component).Position.Y, ((Button)component).Width, ((Button)component).Height), Color.Gray);
                     }
 
-                    _spriteBatch.DrawString(spriteFont, ((Button)component).text, new Vector2(((Button)component).position.X + ((Button)component).width / 4, ((Button)component).position.Y + ((Button)component).height / 3), Color.Black);
+                    _spriteBatch.DrawString(spriteFont, ((Button)component).Text, new Vector2(((Button)component).Position.X + ((Button)component).Width / 4, ((Button)component).Position.Y + ((Button)component).Height / 3), Color.Black);
                 }
                 else if (component.GetType() == typeof(Label))
                 {
-                    _spriteBatch.DrawString(spriteFont, ((Label)component).text, new Vector2(component.position.X, component.position.Y), Color.Black);
+                    _spriteBatch.DrawString(spriteFont, ((Label)component).Text, new Vector2(component.Position.X, component.Position.Y), Color.Black);
                 }
             }
 
             // Draw graph
 
             // background
-            _spriteBatch.Draw(rectangleBlock, new Rectangle((int)graph.position.X, (int)graph.position.Y, graph.width, graph.height), Color.DimGray);
+            _spriteBatch.Draw(rectangleBlock, new Rectangle((int)graph.Position.X, (int)graph.Position.Y, graph.Width, graph.Height), Color.DimGray);
 
-            System.Diagnostics.Debug.WriteLine("asd: " + graph.datas.Count);
-
-            foreach (GraphAnimalData d in graph.datas)
+            foreach (GraphData d in graph.Datas)
             {
                 _spriteBatch.Draw(rectangleBlock, new Rectangle((int)d.position.X, (int)d.position.Y, GameVariables.GraphRectSize, GameVariables.GraphRectSize), d.Color);
             }
