@@ -12,7 +12,7 @@ namespace WarOfFoxesAndRabbits
 
         public List<GraphData> Datas => datas;
 
-        public Graph(Vector2 position, int width = 300, int height = 150)
+        public Graph(Vector2 position, int width = 300, int height = 200)
         {
             this.Position = position;
             this.Width = width;
@@ -24,7 +24,7 @@ namespace WarOfFoxesAndRabbits
             int max = GameVariables.CellsHorizontallyCount * GameVariables.CellsVerticallyCount;
 
             double percent = (double) count / max;
-            double posY = Position.Y + Height - GameVariables.GraphRectSize - percent*Height*10;
+            double posY = Position.Y + Height - GameVariables.GraphRectSize - percent * Height * 10;
 
             datas.Add(new GraphData(animalType, new Vector2( Position.X + Width , (float) posY) ));
         }
