@@ -97,11 +97,11 @@ namespace WarOfFoxesAndRabbits
             components.Add(pauseButton);
 
             // Label to show the tickrate
-            Label tickrateLabel = new Label(tickrate.ToString() + " tick", new Vector2(GameVariables.GameCanvasWidth + 100, 166));
+            Label tickrateLabel = new Label(tickrate.ToString() + " tick", new Vector2(GameVariables.GameCanvasWidth + 102, 166));
             components.Add(tickrateLabel);
 
             // Increment tickrate button
-            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 150, 150), () =>
+            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 160, 150), () =>
             {
                 if (tickrate < 59)
                 {
@@ -120,18 +120,19 @@ namespace WarOfFoxesAndRabbits
                 }
             }, text: "-", width: 50, height: 50));
 
-            // Max tickrate
-            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 270, 150), () =>
-            {
-                tickrate = 59;
-                tickrateLabel.Text = tickrate.ToString() + " tick";
-            }, text: "Max", width: 50, height: 50));
             //Min tickrate
-            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 210, 150), () =>
+            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 220, 150), () =>
             {
                 tickrate = 1;
                 tickrateLabel.Text = tickrate.ToString() + " tick";
             }, text: "Min", width: 50, height: 50));
+            // Max tickrate
+            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 280, 150), () =>
+            {
+                tickrate = 59;
+                tickrateLabel.Text = tickrate.ToString() + " tick";
+            }, text: "Max", width: 50, height: 50));
+            
 
             // Button to draw animals on the field
             Button rabbitPencil = new();

@@ -6,11 +6,11 @@ namespace WarOfFoxesAndRabbits
     {
         public Fox() : base()
         {
-            Sate = 18;
+            Sate = 100;
             Age = 0;
 
-            MaxSate = 30;
-            MaxAge = 120;
+            MaxSate = 100;
+            MaxAge = 150;
 
             HasAte = true;
             HasMoved = true;
@@ -19,9 +19,9 @@ namespace WarOfFoxesAndRabbits
 
         public override Color Color => Color.Red;
 
-        public override bool CanBreed() => Sate >= 16;
+        public override bool CanBreed() => Sate >= 35;
 
-        public override bool CanEat() => Sate < 25;
+        public override bool CanEat() => Sate < 60;
         public void Eat()
         {
             if (Sate < MaxSate)

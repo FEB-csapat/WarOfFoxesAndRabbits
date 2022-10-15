@@ -5,8 +5,6 @@ using System.Linq;
 
 namespace WarOfFoxesAndRabbits
 {
-
-    // TODO: refactor
     class RabbitHandler
     {
         static public Cell[,] Check(Cell[,] field, int x, int y)
@@ -135,7 +133,6 @@ namespace WarOfFoxesAndRabbits
             return field;
         }
     }
-
 
     class FoxHandler
     {
