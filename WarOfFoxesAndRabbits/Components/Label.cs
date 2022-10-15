@@ -2,14 +2,14 @@
 
 namespace WarOfFoxesAndRabbits
 {
-    internal class Label : Component
+    public class Label : Component
     {
-        public string text;
+        public string Text { get; set; }
 
         public Label(string text, Vector2 position)
         {
-            this.text = text;
-            this.position = position;
+            this.Text = text;
+            this.Position = position;
         }
     }
 }
