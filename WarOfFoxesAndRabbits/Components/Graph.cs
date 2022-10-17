@@ -33,7 +33,7 @@ namespace WarOfFoxesAndRabbits
         {
             for (int i = 0; i< datas.Count; i++)
             {
-                if (datas[i].position.X < Position.X+GameVariables.GraphRectSize)
+                if (datas[i].Position.X < Position.X+GameVariables.GraphRectSize)
                 {
                     datas.RemoveAt(i);
                 }

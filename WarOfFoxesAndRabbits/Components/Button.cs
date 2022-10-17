@@ -7,7 +7,7 @@ namespace WarOfFoxesAndRabbits
     internal class Button : Component
     {
         public string Text { get; set; }
-        public Action onClick
+        public Action OnClick
         {
             get; private set;
         }
@@ -24,7 +24,7 @@ namespace WarOfFoxesAndRabbits
         public Button(Vector2 position, Action onClick, string text = "", Texture2D image = null, int width = 100, int height = 50, bool isSelected = false)
         {
             this.Text = text;
-            this.onClick = onClick;
+            this.OnClick = onClick;
             this.Position = position;
             this.ImageTexture = image;
             this.Width = width;

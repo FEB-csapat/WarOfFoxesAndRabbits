@@ -4,7 +4,6 @@ namespace WarOfFoxesAndRabbits
 {
     public class Cell
     {
-        
         private Vector2 Position { get; set; }
 
         public int PosX { get => (int)Position.X; }

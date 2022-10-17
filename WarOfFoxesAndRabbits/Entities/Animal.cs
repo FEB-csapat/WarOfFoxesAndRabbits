@@ -2,7 +2,13 @@
 {
     public abstract class Animal : Entity
     {
+        protected void Initialize()
+        {
+            Age = 0;
+            Sate = InitialSate;
+        }
         public int Sate { get; protected set; }
+        protected int InitialSate { get; set; }
         protected int MaxSate { get; set; }
 
         public int Age { get; protected set; }

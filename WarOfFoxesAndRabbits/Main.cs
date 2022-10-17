@@ -9,30 +9,32 @@ namespace WarOfFoxesAndRabbits
     {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        Texture2D rectangleBlock;
-        SpriteFont spriteFont;
+        private Texture2D rectangleBlock;
+        private SpriteFont spriteFont;
 
+        private readonly Cell[,] field = new Cell[GameVariables.CellsHorizontallyCount, GameVariables.CellsVerticallyCount];
 
-        readonly Cell[,] field = new Cell[GameVariables.CellsHorizontallyCount, GameVariables.CellsVerticallyCount];
+        private MouseState previousMouseState;
 
-        MouseState previousMouseState;
+        private bool paused = false;
+        private bool enabledLakes = false;
 
-        bool paused = false;
-        bool enabledLakes = false;
+        #region Variables for components
 
-        // Variables for components
-        readonly List<Component> components = new();
-        Label generationLabel;
-        int generation = 0;
-        Label foxLabel;
-        Label rabbitLabel;
+        private readonly List<Component> components = new();
+        private Label generationLabel;
+        private int generation = 0;
+        private Label foxLabel;
+        private Label rabbitLabel;
 
-        Graph graph;
+        private Graph graph;
 
-        PencilType pencilSelected = PencilType.NONE;
+        private PencilType pencilSelected = PencilType.NONE;
 
-        static long tickCounter = 0;
-        static int tickrate = 1;
+        #endregion
+
+        private static long tickCounter = 0;
+        private static int tickrate = 1;
 
         public Main()
         {
@@ -55,7 +57,7 @@ namespace WarOfFoxesAndRabbits
 
         protected override void LoadContent()
         {
-            #region Components
+            #region Initializing components
 
             spriteFont = Content.Load<SpriteFont>("Fonts/Arial");
 
@@ -103,21 +105,29 @@ namespace WarOfFoxesAndRabbits
             // Increment tickrate button
             components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 160, 150), () =>
             {
-                if (tickrate < 59)
+                if (tickrate+2 <= 60)
                 {
                     tickrate += 2;
-                    tickrateLabel.Text = tickrate.ToString() + " tick";
                 }
+                else
+                {
+                    tickrate = 60;
+                }
+                tickrateLabel.Text = tickrate.ToString() + " tick";
             }, text: "+", width: 50, height: 50));
 
             // Decrement tickrate button
             components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 50, 150), () =>
             {
-                if (tickrate > 1)
+                if (tickrate-2 > 0)
                 {
                     tickrate -= 2;
-                    tickrateLabel.Text = tickrate.ToString() + " tick";
                 }
+                else
+                {
+                    tickrate = 1;
+                }
+                tickrateLabel.Text = tickrate.ToString() + " tick";
             }, text: "-", width: 50, height: 50));
 
             //Min tickrate
@@ -129,7 +139,7 @@ namespace WarOfFoxesAndRabbits
             // Max tickrate
             components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 280, 150), () =>
             {
-                tickrate = 59;
+                tickrate = 60;
                 tickrateLabel.Text = tickrate.ToString() + " tick";
             }, text: "Max", width: 50, height: 50));
             
@@ -271,8 +281,11 @@ namespace WarOfFoxesAndRabbits
 
         protected override void Update(GameTime gameTime)
         {
+            // If escape button is pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
+            } 
 
             tickCounter++;
             if (tickCounter % (60 / tickrate) == 0)
@@ -280,17 +293,8 @@ namespace WarOfFoxesAndRabbits
                 if (!paused)
                 {
                     GameManager.Update(field);
-                    generation++;
-
-                    // Calculations for components
-                    if (field.CountAnimals() == 0)
-                    {
-                        generation = 0;
-                    }
-                    else
-                    {
-                        generationLabel.Text = "Generation: " + generation;
-                    }
+                    
+                    #region Updating components
 
                     int rabbitCount = field.CountRabbits();
                     int foxCount = field.CountFoxes();
@@ -298,7 +302,16 @@ namespace WarOfFoxesAndRabbits
                     rabbitLabel.Text = "Rabbits: " + rabbitCount;
                     foxLabel.Text = "Foxes: " + foxCount;
 
-
+                    generation++;
+                    if (rabbitCount + foxCount == 0)
+                    {
+                        generation = 0;
+                    }
+                    else
+                    {
+                        generationLabel.Text = "Generation: " + generation;
+                    }
+                    
                     if (rabbitCount > 0)
                     {
                         graph.AddData(AnimalType.RABBIT, rabbitCount);
@@ -310,33 +323,35 @@ namespace WarOfFoxesAndRabbits
                     }
 
                     graph.Update();
+
+                    #endregion
                 }
             }
 
-            
-
-
-
             MouseState currentMouseState = Mouse.GetState();
 
-            // Mouse clicked
+            #region Mouse clicked
+
             if (previousMouseState.LeftButton == ButtonState.Released
             && currentMouseState.LeftButton == ButtonState.Pressed)
             {
                 foreach (Component component in components)
                 {
-                    if (component.GetType() == typeof(Button))
+                    if (component is Button)
                     {
                         if (currentMouseState.X >= ((Button)component).Position.X && currentMouseState.X <= ((Button)component).Position.X + ((Button)component).Width
                         && currentMouseState.Y >= ((Button)component).Position.Y && currentMouseState.Y <= ((Button)component).Position.Y + ((Button)component).Height)
                         {
-                            ((Button)component).onClick();
+                            ((Button)component).OnClick();
                         }
                     }
                 }
             }
 
-            // Mouse being held
+            #endregion
+
+            #region Mouse being held
+
             if (pencilSelected != PencilType.NONE)
             {
                 if (currentMouseState.LeftButton == ButtonState.Pressed)
@@ -346,7 +361,7 @@ namespace WarOfFoxesAndRabbits
                         for (int x = 0; x < GameVariables.CellsVerticallyCount; x++)
                         {
                             if (currentMouseState.X >= x * GameVariables.CellSize && currentMouseState.X <= x * GameVariables.CellSize + GameVariables.CellSize
-                            && currentMouseState.Y >= y * GameVariables.CellSize && currentMouseState.Y <= y * GameVariables.CellSize + GameVariables.CellSize
+                            &&  currentMouseState.Y >= y * GameVariables.CellSize && currentMouseState.Y <= y * GameVariables.CellSize + GameVariables.CellSize
                             )
                             {
                                 if (field[x, y].Animal == null)
@@ -375,6 +390,9 @@ namespace WarOfFoxesAndRabbits
                     }
                 }
             }
+
+            #endregion
+
             previousMouseState = Mouse.GetState();
 
             base.Update(gameTime);
@@ -382,8 +400,12 @@ namespace WarOfFoxesAndRabbits
 
         protected override void Draw(GameTime gameTime)
         {
+            // Set background color
             GraphicsDevice.Clear(Color.DarkGray);
             _spriteBatch.Begin();
+
+            #region Draw cells
+
             for (int y = 0; y < GameVariables.CellsVerticallyCount; y++)
             {
                 for (int x = 0; x < GameVariables.CellsVerticallyCount; x++)
@@ -392,13 +414,17 @@ namespace WarOfFoxesAndRabbits
                 }
             }
 
+            #endregion
+
+            #region Draw components
+
             foreach (Component component in components)
             {
-                if (component.GetType() == typeof(Button))
+                if (component is Button)
                 {
                     if (((Button)component).ImageTexture != null)
                     {
-
+                        // Draw black "border" to selected button
                         if (((Button)component).IsSelected)
                         {
                             _spriteBatch.Draw(rectangleBlock, new Rectangle(((int)((Button)component).Position.X) - 4, ((int)((Button)component).Position.Y) - 4, ((Button)component).Width + 6, ((Button)component).Height + 6), Color.Black);
@@ -409,24 +435,28 @@ namespace WarOfFoxesAndRabbits
                     {
                         _spriteBatch.Draw(rectangleBlock, new Rectangle((int)((Button)component).Position.X, (int)((Button)component).Position.Y, ((Button)component).Width, ((Button)component).Height), Color.Gray);
                     }
-
+                    // Draw text of button
                     _spriteBatch.DrawString(spriteFont, ((Button)component).Text, new Vector2(((Button)component).Position.X + ((Button)component).Width / 4, ((Button)component).Position.Y + ((Button)component).Height / 3), Color.Black);
                 }
-                else if (component.GetType() == typeof(Label))
+                else if (component is Label)
                 {
                     _spriteBatch.DrawString(spriteFont, ((Label)component).Text, new Vector2(component.Position.X, component.Position.Y), Color.Black);
                 }
             }
 
-            // Draw graph
+            #endregion
+
+            #region Draw graph
 
             // background
             _spriteBatch.Draw(rectangleBlock, new Rectangle((int)graph.Position.X, (int)graph.Position.Y, graph.Width, graph.Height), Color.DimGray);
 
             foreach (GraphData d in graph.Datas)
             {
-                _spriteBatch.Draw(rectangleBlock, new Rectangle((int)d.position.X, (int)d.position.Y, GameVariables.GraphRectSize, GameVariables.GraphRectSize), d.Color);
+                _spriteBatch.Draw(rectangleBlock, new Rectangle((int)d.Position.X, (int)d.Position.Y, GameVariables.GraphRectSize, GameVariables.GraphRectSize), d.Color);
             }
+
+            #endregion
 
             _spriteBatch.End();
 

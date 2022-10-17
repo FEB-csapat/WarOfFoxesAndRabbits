@@ -4,20 +4,20 @@ namespace WarOfFoxesAndRabbits
 {
     public class GraphData
     {
-        public AnimalType animalType;
-        public Vector2 position;
+        public AnimalType AnimalType { get; private set; }
+        public Vector2 Position { get; private set; }
 
         public GraphData(AnimalType animalType, Vector2 position)
         {
-            this.animalType = animalType;
-            this.position = position;
+            this.AnimalType = animalType;
+            this.Position = position;
         }
 
         public Color Color
         {
             get
             {
-                if (animalType == AnimalType.RABBIT)
+                if (AnimalType == AnimalType.RABBIT)
                 {
                     return Color.White;
                 }
@@ -27,7 +27,7 @@ namespace WarOfFoxesAndRabbits
 
         public void Update()
         {
-            position += new Vector2(-GameVariables.GraphRectSize, 0);
+            Position += new Vector2(-GameVariables.GraphRectSize, 0);
         }
     }
 }

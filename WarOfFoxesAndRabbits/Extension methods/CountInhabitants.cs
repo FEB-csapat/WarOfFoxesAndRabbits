@@ -26,7 +26,7 @@
             {
                 for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)
                 {
-                    if (field[x, y].Animal != null && field[x, y].Animal.GetType() == typeof(Rabbit))
+                    if (field[x, y].Animal != null && field[x, y].Animal is Rabbit)
                     {
                         counter++;
                     }
@@ -42,7 +42,7 @@
             {
                 for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)
                 {
-                    if (field[x, y].Animal != null && field[x, y].Animal.GetType() == typeof(Fox))
+                    if (field[x, y].Animal != null && field[x, y].Animal is Fox)
                     {
                         counter++;
                     }

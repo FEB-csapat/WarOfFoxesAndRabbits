@@ -24,15 +24,15 @@ namespace WarOfFoxesAndRabbits
             }
         }
         
-        public void GrassEaten()
+        public void GrassEaten(int amount)
         {
-            if (Stage <= 1)
+            if (Stage - amount < 0)
             {
                 Stage = 0;
             }
             else
             {
-                Stage--;
+                Stage-=amount;
             }
         }
 

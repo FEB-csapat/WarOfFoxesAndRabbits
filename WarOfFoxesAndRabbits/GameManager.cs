@@ -5,13 +5,14 @@ using System.Linq;
 
 namespace WarOfFoxesAndRabbits
 {
-    class RabbitHandler
+    // Manage rabbits according to the rules
+    static class RabbitHandler
     {
+        // Perform rules on each cell containing a rabbit
         static public Cell[,] Check(Cell[,] field, int x, int y)
         {
             Rabbit rabbitOnCurrentCell = (Rabbit)field[x, y].Animal;
-
-            // Rabbit dies
+           
             if (rabbitOnCurrentCell.IsDead())
             {
                 field[x, y].Animal = null;
@@ -20,24 +21,19 @@ namespace WarOfFoxesAndRabbits
 
             if (!rabbitOnCurrentCell.HasMoved)
             {
-                // rules
                 if (field[x, y].Matter is Grass grass)
                 {
                     if (grass.Stage >= 1 && rabbitOnCurrentCell.CanEat())
                     {
-                        if (grass.Stage == 2 && rabbitOnCurrentCell.Sate < 4)
+                        if (grass.Stage >= 2)
                         {
-                            (field[x, y].Animal as Rabbit).Eat(2);
-                            grass.GrassEaten();
-                        }
-                        else if (grass.Stage == 2 && rabbitOnCurrentCell.Sate >= 4)
-                        {
-                            //Can't eat sate too high!
+                            rabbitOnCurrentCell.Eat(2);
+                            grass.GrassEaten(2);
                         }
                         else
                         {
-                            (field[x, y].Animal as Rabbit).Eat(1);
-                            grass.GrassEaten();
+                            rabbitOnCurrentCell.Eat(1);
+                            grass.GrassEaten(1);
                         }
                     }
                     if (grass.Stage < 1)
@@ -56,7 +52,8 @@ namespace WarOfFoxesAndRabbits
                                 && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
                                 && (px != 0 || py != 0))
                                 {
-                                    // Check cells to move
+                                    #region Find cells to move
+
                                     if (field[x + px, y + py].Animal == null)
                                     {
                                         if (field[x + px, y + py].Matter is Water)
@@ -69,22 +66,29 @@ namespace WarOfFoxesAndRabbits
                                         }
                                     }
 
-                                    // Check mates to mate with
+                                    #endregion
+
+                                    #region Find father
+
                                     if (fatherRabbit == null
                                     && field[x + px, y + py].Animal != null
                                     && rabbitOnCurrentCell.CanBreed()
                                     && field[x + px, y + py].Animal.CanBreed()
-                                    && field[x + px, y + py].Animal.GetType() == typeof(Rabbit)
+                                    && field[x + px, y + py].Animal is Rabbit
                                     && !field[x + px, y + py].Animal.HasProduced)
                                     {
                                         fatherRabbit = (Rabbit)field[x + px, y + py].Animal;
                                     }
+
+                                    #endregion
                                 }
                             }
                         }
 
                         if (surroundingCellsToMove.Count != 0)
                         {
+                            #region Birth rabbit
+
                             // Birth rabbit to empty cell
                             if (fatherRabbit != null)
                             {
@@ -95,13 +99,16 @@ namespace WarOfFoxesAndRabbits
                                 rabbitOnCurrentCell.HasProduced = true;
                             }
 
+                            #endregion
+
+                            #region Move rabbit
+
                             // Move rabbit to cell with best grass on it
                             if (surroundingCellsToMove.Count != 0)
                             {
                                 List<Cell> optionalCells = new List<Cell>();
                                 bool hasWaterCell = false;
 
-                                // TODO: sometimes throws exception
                                 double bestGrassStage = Math.Floor(surroundingCellsToMove.Where(x => x.Matter is Grass).Max(y => ((Grass)y.Matter).Stage));
                                 foreach (Cell cell in surroundingCellsToMove)
                                 {
@@ -125,20 +132,23 @@ namespace WarOfFoxesAndRabbits
                                 field[x, y].Animal = null;
                                 ((Rabbit)optionalCells[ran].Animal).HasMoved = true;
                             }
+
+                            #endregion
                         }
                     }
                 }
-
             }
             return field;
         }
     }
 
-    class FoxHandler
+    // TODO: nerf foxes
+    // Manage foxes according to the rules
+    static class FoxHandler
     {
         static private void Birth(ref List<Cell> surroundingCellsToBirth, ref Cell cellWithFatherFox, ref Fox fatherFox)
         {
-            if (fatherFox != null)
+            if (fatherFox != null && surroundingCellsToBirth.Count > 0)
             {
                 int r = GameVariables.Random.Next(0, surroundingCellsToBirth.Count);
                 surroundingCellsToBirth[r].Animal = new Fox();
@@ -147,21 +157,35 @@ namespace WarOfFoxesAndRabbits
                 cellWithFatherFox.Animal.HasProduced = true;
             }
         }
+
         // Fills the surroundingCells lists to perform actions latter on it
         private static void FindSurroundingCells(Cell[,] field, int x, int y, out List<Cell> surroundingCellsToMove, out List<Cell> surroundingCellsToHunt, ref Fox fatherFox)
         {
             surroundingCellsToMove = new List<Cell>();
             surroundingCellsToHunt = new List<Cell>();
 
-            for (int py = -2; py <= 2; py++)
+            int vision = 2;
+            if (((Fox)field[x, y].Animal).Sate < 40)
             {
-                for (int px = -2; px <= 2; px++)
+                vision = 2;
+            }else if (((Fox)field[x, y].Animal).Sate < 20)
+            {
+                vision = 3;
+            }
+            else if (((Fox)field[x, y].Animal).Sate < 10)
+            {
+                vision = 4;
+            }
+
+            for (int py = -vision; py <= vision; py++)
+            {
+                for (int px = -vision; px <= vision; px++)
                 {
                     if (y + py >= 0 && x + px >= 0
                     && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
                     && (px != 0 || py != 0))
                     {
-                        // Check cells to move
+                        // Find cells to move
                         if (field[x + px, y + py].Animal == null)
                         {
                             if (field[x + px, y + py].Matter is Grass)
@@ -169,19 +193,19 @@ namespace WarOfFoxesAndRabbits
                                 surroundingCellsToMove.Add(field[x + px, y + py]);
                             }
                         }
-                        // Check cells to hunt
-                        else if (field[x + px, y + py].Animal.GetType() == typeof(Rabbit)
+                        // Find cells to hunt
+                        else if (field[x + px, y + py].Animal is Rabbit
                              && ((Fox)field[x, y].Animal).CanEat())
                         {
                             surroundingCellsToHunt.Add(field[x + px, y + py]);
                         }
 
-                        // Check mates to mate with
+                        // Find mates to mate with
                         if (fatherFox == null
                         && field[x + px, y + py].Animal != null
                         && field[x, y].Animal.CanBreed()
                         && field[x + px, y + py].Animal.CanBreed()
-                        && field[x + px, y + py].Animal.GetType() == typeof(Fox)
+                        && field[x + px, y + py].Animal is Fox
                         && !field[x + px, y + py].Animal.HasProduced)
                         {
                             fatherFox = (Fox)field[x + px, y + py].Animal;
@@ -192,37 +216,39 @@ namespace WarOfFoxesAndRabbits
             
         }
 
-
-        static private void Move(ref List<Cell> surroundingCellsToMove, ref Cell cellWithFox, out Cell nextCellWhereFoxMoved)
+        
+        static private Cell Move(ref List<Cell> surroundingCellsToMove, ref Cell cellWithFox)
         {
             int ran = GameVariables.Random.Next(0, surroundingCellsToMove.Count);
-            nextCellWhereFoxMoved = surroundingCellsToMove[ran];
             surroundingCellsToMove[ran].Animal = cellWithFox.Animal;
             surroundingCellsToMove[ran].Animal.HasMoved = true;
             cellWithFox.Animal = null;
+
+            // Return where it moved
+            return surroundingCellsToMove[ran];
         }
 
         // Hunts. Moves fox to the rabbit's cell. Rabbit dies
-        static private void Hunt(ref List<Cell> surroundingCellsToHunt, ref Cell cellWithFox, out Cell nextCellWhereFoxMoved)
+        static private Cell Hunt(ref List<Cell> surroundingCellsToHunt, ref Cell cellWithFox)
         {
             int ran = GameVariables.Random.Next(0, surroundingCellsToHunt.Count);
             (cellWithFox.Animal as Fox).Eat();
             cellWithFox.Animal.HasAte = true;
             surroundingCellsToHunt[ran].Animal = cellWithFox.Animal;
-            nextCellWhereFoxMoved = surroundingCellsToHunt[ran];
             cellWithFox.Animal = null;
+
+            // Return where it moved
+            return surroundingCellsToHunt[ran];
         }
 
-        // perform rules on each cell containing a fox
+        // Perform rules on each cell containing a fox
         static public Cell[,] Check(Cell[,] field, int x, int y)
         {
-            // if fox is dead, remove it
             if (field[x, y].Animal.IsDead())
             {
                 field[x, y].Animal = null;
                 return field;
             }
-
 
             if (!field[x, y].Animal.HasMoved)
             {
@@ -230,38 +256,49 @@ namespace WarOfFoxesAndRabbits
                 List<Cell> surroundingCellsToMove, surroundingCellsToHunt;
                 Fox fatherFox = null;
                 FindSurroundingCells(field, x, y, out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
-               
 
-                // Check if there are bunnies to hunt in the surrounding cells
-                if (surroundingCellsToHunt.Count > 0)
+                if (surroundingCellsToMove.Count > 0)
                 {
                     Birth(ref surroundingCellsToMove, ref field[x, y], ref fatherFox);
-
-                    Hunt(ref surroundingCellsToHunt, ref field[x, y], out nextCellWhereFoxMoved);
-
-                    FindSurroundingCells(field, nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY, out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
-
-                    Move(ref surroundingCellsToMove, ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY], out _);
-
                 }
-                // There were no rabbits in the surrounding cells, so just move if there is cell to move
+
+                // Check if there are any rabbits to hunt in the surrounding cells
+                if (surroundingCellsToHunt.Count > 0)
+                {
+                    nextCellWhereFoxMoved = Hunt(ref surroundingCellsToHunt, ref field[x, y]);
+
+                    // has moved successfully
+                    if (nextCellWhereFoxMoved != null)
+                    {
+                        FindSurroundingCells(field, nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY, out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
+                        if (surroundingCellsToMove.Count > 0)
+                        {
+                            nextCellWhereFoxMoved = Move(ref surroundingCellsToMove, ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                        }
+                    }
+                }
+                // There were no rabbits in the surrounding cells, so just move if there is a cell to move
                 else if (surroundingCellsToMove.Count > 0)
                 {
-                    Move(ref surroundingCellsToMove, ref field[x, y], out nextCellWhereFoxMoved);
+                    nextCellWhereFoxMoved = Move(ref surroundingCellsToMove, ref field[x, y]);
 
-                    FindSurroundingCells(field, nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY, out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
+                    // has moved successfully
+                    if (nextCellWhereFoxMoved != null)
+                    {
+                        FindSurroundingCells(field, nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY, out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
 
-                    //Checking if it can hunt or not
-                    if (surroundingCellsToHunt.Count > 0)
-                    {
-                        Hunt(ref surroundingCellsToHunt, ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY], out _);
-                    }
-                    else
-                    {
-                        //It can't hunt, so it makes the second move
-                        if (surroundingCellsToMove.Count > 0)
-                        {  
-                            Move(ref surroundingCellsToMove, ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY], out _);
+                        //Check if it can hunt or not
+                        if (surroundingCellsToHunt.Count > 0)
+                        {
+                            nextCellWhereFoxMoved = Hunt(ref surroundingCellsToHunt, ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                        }
+                        else
+                        {
+                            //It can't hunt, so it makes the second move
+                            if (surroundingCellsToMove.Count > 0)
+                            {
+                                nextCellWhereFoxMoved = Move(ref surroundingCellsToMove, ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                            }
                         }
                     }
                 }
@@ -269,8 +306,9 @@ namespace WarOfFoxesAndRabbits
             return field;
         }
     }
+
     // Manages the game's rules
-    class GameManager
+    static class GameManager
     {
         // Modify the fields according to the rules
         public static Cell[,] Update(Cell[,] field)
@@ -298,7 +336,7 @@ namespace WarOfFoxesAndRabbits
                 }
             }
 
-
+            // Reset properties of animals
             for (int y = 0; y < GameVariables.CellsVerticallyCount; y++)
             {
                 for (int x = 0; x < GameVariables.CellsHorizontallyCount; x++)

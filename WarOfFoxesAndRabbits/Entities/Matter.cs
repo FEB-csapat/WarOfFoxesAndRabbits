@@ -2,7 +2,7 @@
 {
     public abstract class Matter : Entity
     {
-        public Matter()
+        public Matter() : base()
         {
         }
     }
