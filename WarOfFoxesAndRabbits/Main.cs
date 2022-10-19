@@ -292,7 +292,7 @@ namespace WarOfFoxesAndRabbits
             {
                 if (!paused)
                 {
-                    GameManager.Update(field);
+                    GameManager.Instance.Update(field);
                     
                     #region Updating components
 

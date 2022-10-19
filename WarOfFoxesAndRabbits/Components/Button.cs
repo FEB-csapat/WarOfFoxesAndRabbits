@@ -29,6 +29,7 @@ namespace WarOfFoxesAndRabbits
             this.ImageTexture = image;
             this.Width = width;
             this.Height = height;
+            this.IsSelected = isSelected;
         }
     }
 }
