@@ -370,8 +370,9 @@ namespace WarOfFoxesAndRabbits
                 }
             }
             MouseState currentMouseState = Mouse.GetState();
-                cordLabel.Position = new Vector2(currentMouseState.X + 10, currentMouseState.Y + 10);
-                cordLabel.Text = $"(x:{currentMouseState.X} ,y:{currentMouseState.Y})";
+            cordLabel.Position = new Vector2(currentMouseState.X + 10, currentMouseState.Y + 10);
+            cordLabel.Text = $"(x:{1 + currentMouseState.X / GameVariables.CellSize} ,y:{1+ currentMouseState.Y / GameVariables.CellSize})";
+          
             #region Mouse clicked
 
             if (previousMouseState.LeftButton == ButtonState.Released
@@ -392,112 +393,54 @@ namespace WarOfFoxesAndRabbits
 
             #endregion
 
+
+            void DrawWithPencilAt(int x, int y)
+            {
+                int size = (int) pencilSizeSelected;
+                for (int py = -size; py <= size; py++)
+                {
+                    for (int px = -size; px <= size; px++)
+                    {
+                        if (y + py >= 0 && x + px >= 0
+                        && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
+                        && field[x, y].Animal == null)
+                        {
+                            switch (pencilSelected)
+                            {
+                                case PencilType.BUNNY:
+                                    field[x+px, y+py].Animal = new Rabbit();
+                                    break;
+                                case PencilType.FOX:
+                                    field[x + px, y + py].Animal = new Fox();
+                                    break;
+                                case PencilType.WALL:
+                                    field[x + px, y + py].Matter = new Wall();
+                                    break;
+                                case PencilType.WATER:
+                                    field[x + px, y + py].Matter = new Water(GameVariables.minWaterDepth);
+                                    break;
+                                case PencilType.GRASS:
+                                    field[x + px, y + py].Matter = new Grass();
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+
             #region Mouse being held
 
-            if (pencilSelected != PencilType.NONE)
+            if (currentMouseState.LeftButton == ButtonState.Pressed && pencilSelected != PencilType.NONE)
             {
-                if (currentMouseState.LeftButton == ButtonState.Pressed)
+                for (int y = 0; y < GameVariables.CellsVerticallyCount; y++)
                 {
-                    for (int y = 0; y < GameVariables.CellsVerticallyCount; y++)
+                    for (int x = 0; x < GameVariables.CellsVerticallyCount; x++)
                     {
-                        for (int x = 0; x < GameVariables.CellsVerticallyCount; x++)
+                        if (currentMouseState.X >= x * GameVariables.CellSize && currentMouseState.X <= x * GameVariables.CellSize + GameVariables.CellSize
+                        &&  currentMouseState.Y >= y * GameVariables.CellSize && currentMouseState.Y <= y * GameVariables.CellSize + GameVariables.CellSize
+                        )
                         {
-
-                            if (currentMouseState.X >= x * GameVariables.CellSize && currentMouseState.X <= x * GameVariables.CellSize + GameVariables.CellSize
-                                && currentMouseState.Y >= y * GameVariables.CellSize && currentMouseState.Y <= y * GameVariables.CellSize + GameVariables.CellSize
-                                )
-                            {
-                                if (pencilSizeSelected == PencilSizeType.SMALL)
-                                {
-                                    if (field[x, y].Animal == null)
-                                    {
-                                        switch (pencilSelected)
-                                        {
-                                            case PencilType.BUNNY:
-                                                field[x, y].Animal = new Rabbit();
-                                                break;
-                                            case PencilType.FOX:
-                                                field[x, y].Animal = new Fox();
-                                                break;
-                                            case PencilType.WALL:
-                                                field[x, y].Matter = new Wall();
-                                                break;
-                                            case PencilType.WATER:
-                                                field[x, y].Matter = new Water(GameVariables.minWaterDepth);
-                                                break;
-                                            case PencilType.GRASS:
-                                                field[x, y].Matter = new Grass();
-                                                break;
-                                        }
-                                    }
-                                }
-
-                                else if (pencilSizeSelected == PencilSizeType.MEDIUM)
-                                {
-                                    for (int py = -1; py <= 1; py++)
-                                    {
-                                        for (int px = -1; px <= 1; px++)
-                                        {
-                                            if (y + py >= 0 && x + px >= 0
-                                            && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
-                                            && field[x, y].Animal == null)
-                                            {
-                                                switch (pencilSelected)
-                                                {
-                                                    case PencilType.BUNNY:
-                                                        field[x+px, y+py].Animal = new Rabbit();
-                                                        break;
-                                                    case PencilType.FOX:
-                                                        field[x + px, y + py].Animal = new Fox();
-                                                        break;
-                                                    case PencilType.WALL:
-                                                        field[x + px, y + py].Matter = new Wall();
-                                                        break;
-                                                    case PencilType.WATER:
-                                                        field[x + px, y + py].Matter = new Water(GameVariables.minWaterDepth);
-                                                        break;
-                                                    case PencilType.GRASS:
-                                                        field[x + px, y + py].Matter = new Grass();
-                                                        break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                else if (pencilSizeSelected == PencilSizeType.LARGE)
-                                {
-                                    for (int py = -2; py <= 2; py++)
-                                    {
-                                        for (int px = -2; px <= 2; px++)
-                                        {
-                                            if (y + py >= 0 && x + px >= 0
-                                            && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
-                                            && field[x, y].Animal == null)
-                                            {
-                                                switch (pencilSelected)
-                                                {
-                                                    case PencilType.BUNNY:
-                                                        field[x + px, y + py].Animal = new Rabbit();
-                                                        break;
-                                                    case PencilType.FOX:
-                                                        field[x + px, y + py].Animal = new Fox();
-                                                        break;
-                                                    case PencilType.WALL:
-                                                        field[x + px, y + py].Matter = new Wall();
-                                                        break;
-                                                    case PencilType.WATER:
-                                                        field[x + px, y + py].Matter = new Water(GameVariables.minWaterDepth);
-                                                        break;
-                                                    case PencilType.GRASS:
-                                                        field[x + px, y + py].Matter = new Grass();
-                                                        break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            DrawWithPencilAt(x, y);
                         }
                     }
                 }
