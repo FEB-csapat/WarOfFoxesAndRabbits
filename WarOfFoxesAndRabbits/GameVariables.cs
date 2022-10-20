@@ -18,5 +18,7 @@ namespace WarOfFoxesAndRabbits
         public static readonly string Title = "War of foxes and rabbits";
 
         public static readonly int GameCanvasWidth = CellsHorizontallyCount * CellSize;
+
+        public static readonly float minWaterDepth = 0.55f;
     }
 }

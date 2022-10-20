@@ -214,7 +214,7 @@ namespace WarOfFoxesAndRabbits
 
 
             // Hunts. Moves fox to the rabbit's cell. Rabbit dies
-            static private Cell Hunt(ref List<Cell> surroundingCellsToHunt, ref Cell cellWithFox)
+            private Cell Hunt(ref List<Cell> surroundingCellsToHunt, ref Cell cellWithFox)
             {
                 int ran = GameVariables.Random.Next(0, surroundingCellsToHunt.Count);
                 (cellWithFox.Animal as Fox).Eat();

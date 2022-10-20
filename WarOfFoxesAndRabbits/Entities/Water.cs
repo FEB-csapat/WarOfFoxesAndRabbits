@@ -4,11 +4,26 @@ namespace WarOfFoxesAndRabbits
 {
     public class Water : Matter
     {
-        public Water() : base()
-        {
+        private float depth;
 
+        public Water(float depth) : base()
+        {
+            this.depth = depth;
         }
 
-        public override Color Color => Color.DeepSkyBlue;
+        public override Color Color{
+            get{ 
+                return MapColor();
+            }
+        }
+
+        private Color MapColor()
+        {
+            double h =1- GameVariables.minWaterDepth;
+
+            double p = (1- depth) / h;
+
+            return new Color(((int)((31 ) * p )), ((int)((181 - 57) * p + 57)), ((int)((255 - 166) * p + 166)));
+        }
     }
 }

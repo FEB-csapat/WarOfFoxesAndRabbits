@@ -236,9 +236,9 @@ namespace WarOfFoxesAndRabbits
             components.Add(clearButton);
 
             // Label to count foxes and rabbits
-            foxLabel = new Label("Number of rabbits: " + 0, new Vector2(GameVariables.GameCanvasWidth + 50, 330));
+            foxLabel = new Label("Foxes: " + 0, new Vector2(GameVariables.GameCanvasWidth + 50, 330));
             components.Add(foxLabel);
-            rabbitLabel = new Label("Number of rabbits: " + 0, new Vector2(GameVariables.GameCanvasWidth + 50, 350));
+            rabbitLabel = new Label("Rabbits: " + 0, new Vector2(GameVariables.GameCanvasWidth + 50, 350));
             components.Add(rabbitLabel);
 
             graph = new Graph(new Vector2(GameVariables.GameCanvasWidth + 50, 450));
@@ -269,12 +269,14 @@ namespace WarOfFoxesAndRabbits
                 {
                     bool hasWater = false;
 
-                    if (enabledLakes && noise.GetNoise(x, y) >= 0.55)
+                    float waterDepth = noise.GetNoise(x, y);
+
+                    if (enabledLakes && waterDepth >= GameVariables.minWaterDepth)
                     {
                         hasWater = true;
                     }
 
-                    field[x, y] = new Cell(new Vector2(x,y), matter: hasWater ? new Water() : null);
+                    field[x, y] = new Cell(new Vector2(x,y), matter: hasWater ? new Water(waterDepth) : null);
                 }
             }
         }
@@ -337,12 +339,12 @@ namespace WarOfFoxesAndRabbits
             {
                 foreach (Component component in components)
                 {
-                    if (component is Button)
+                    if (component is Button button)
                     {
-                        if (currentMouseState.X >= ((Button)component).Position.X && currentMouseState.X <= ((Button)component).Position.X + ((Button)component).Width
-                        && currentMouseState.Y >= ((Button)component).Position.Y && currentMouseState.Y <= ((Button)component).Position.Y + ((Button)component).Height)
+                        if (currentMouseState.X >= button.Position.X && currentMouseState.X <= button.Position.X + button.Width
+                        && currentMouseState.Y >= button.Position.Y && currentMouseState.Y <= button.Position.Y + button.Height)
                         {
-                            ((Button)component).OnClick();
+                            button.OnClick();
                         }
                     }
                 }
@@ -378,7 +380,7 @@ namespace WarOfFoxesAndRabbits
                                             field[x, y].Matter = new Wall();
                                             break;
                                         case PencilType.WATER:
-                                            field[x, y].Matter = new Water();
+                                            field[x, y].Matter = new Water(GameVariables.minWaterDepth);
                                             break;
                                         case PencilType.GRASS:
                                             field[x, y].Matter = new Grass();
@@ -420,27 +422,27 @@ namespace WarOfFoxesAndRabbits
 
             foreach (Component component in components)
             {
-                if (component is Button)
+                if (component is Button button)
                 {
-                    if (((Button)component).ImageTexture != null)
+                    if (button.ImageTexture != null)
                     {
                         // Draw black "border" to selected button
-                        if (((Button)component).IsSelected)
+                        if (button.IsSelected)
                         {
-                            _spriteBatch.Draw(rectangleBlock, new Rectangle(((int)((Button)component).Position.X) - 4, ((int)((Button)component).Position.Y) - 4, ((Button)component).Width + 6, ((Button)component).Height + 6), Color.Black);
+                            _spriteBatch.Draw(rectangleBlock, new Rectangle(((int)button.Position.X) - 4, ((int)button.Position.Y) - 4, button.Width + 6, button.Height + 6), Color.Black);
                         }
-                        _spriteBatch.Draw(((Button)component).ImageTexture, ((Button)component).Position, Color.White);
+                        _spriteBatch.Draw(button.ImageTexture, button.Position, Color.White);
                     }
                     else
                     {
-                        _spriteBatch.Draw(rectangleBlock, new Rectangle((int)((Button)component).Position.X, (int)((Button)component).Position.Y, ((Button)component).Width, ((Button)component).Height), Color.Gray);
+                        _spriteBatch.Draw(rectangleBlock, new Rectangle((int)button.Position.X, (int)button.Position.Y, button.Width, button.Height), Color.Gray);
                     }
                     // Draw text of button
-                    _spriteBatch.DrawString(spriteFont, ((Button)component).Text, new Vector2(((Button)component).Position.X + ((Button)component).Width / 4, ((Button)component).Position.Y + ((Button)component).Height / 3), Color.Black);
+                    _spriteBatch.DrawString(spriteFont, button.Text, new Vector2(button.Position.X + button.Width / 4, button.Position.Y + button.Height / 3), Color.Black);
                 }
-                else if (component is Label)
+                else if (component is Label label)
                 {
-                    _spriteBatch.DrawString(spriteFont, ((Label)component).Text, new Vector2(component.Position.X, component.Position.Y), Color.Black);
+                    _spriteBatch.DrawString(spriteFont, label.Text, new Vector2(component.Position.X, component.Position.Y), Color.Black);
                 }
             }
 
