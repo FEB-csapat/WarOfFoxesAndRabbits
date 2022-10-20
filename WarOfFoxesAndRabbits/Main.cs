@@ -569,7 +569,10 @@ namespace WarOfFoxesAndRabbits
             }
 
             #endregion
-            if (cordLabel.Position.X-10<=GameVariables.GameCanvasWidth)
+            if (cordLabel.Position.X-10<=GameVariables.GameCanvasWidth
+                && cordLabel.Position.X-10>=0
+                && cordLabel.Position.Y-10>=0
+                && cordLabel.Position.Y-10<=GameVariables.GameCanvasWidth)
             {
                 _spriteBatch.DrawString(spriteFont, cordLabel.Text, new Vector2(cordLabel.Position.X, cordLabel.Position.Y), Color.Black);
             }
