@@ -36,7 +36,7 @@ namespace WarOfFoxesAndRabbits
                 return surroundingCellsToMove[ran];
             }
 
-            protected bool CanBeFather<T>( Animal mother, Animal possibleFather)
+            protected bool CanBeFather<T>(Animal mother, Animal possibleFather)
             {
                 if (possibleFather != null
                     && mother.CanBreed()
@@ -61,6 +61,7 @@ namespace WarOfFoxesAndRabbits
                 if (rabbitOnCurrentCell.IsDead())
                 {
                     field[x, y].Animal = null;
+                    GameManager.Instance.RabbitDeathCounter++;
                     return field;
                 }
 
@@ -79,8 +80,8 @@ namespace WarOfFoxesAndRabbits
                             grass.GrassEaten(1);
                         }
                     }
-                    
-                    
+
+
                     List<Cell> emptySurroundingCells = new List<Cell>();
 
                     Animal fatherRabbit = null;
@@ -124,14 +125,14 @@ namespace WarOfFoxesAndRabbits
 
                     #region Move rabbit
 
-                        
+
                     // Move rabbit to cell with best grass on it
-                        
+
                     List<Cell> optionalCells = new List<Cell>();
 
                     if (emptySurroundingCells.Count != 0)
                     {
-                        if (emptySurroundingCells.Exists(x=>x.Matter != null && x.Matter is Grass) )
+                        if (emptySurroundingCells.Exists(x => x.Matter != null && x.Matter is Grass))
                         {
                             double bestGrassStage = Math.Floor(emptySurroundingCells.Where(x => x.Matter is Grass).Max(y => ((Grass)y.Matter).Stage));
                             foreach (Cell cell in emptySurroundingCells)
@@ -169,7 +170,7 @@ namespace WarOfFoxesAndRabbits
                 surroundingCellsToHunt = new List<Cell>();
 
                 int vision = 2;
-                
+
                 if (((Fox)field[x, y].Animal).Sate < 20)
                 {
                     vision = 3;
@@ -232,6 +233,7 @@ namespace WarOfFoxesAndRabbits
                 if (field[x, y].Animal.IsDead())
                 {
                     field[x, y].Animal = null;
+                    GameManager.Instance.FoxDeathCounter++;
                     return field;
                 }
 
@@ -311,6 +313,14 @@ namespace WarOfFoxesAndRabbits
             }
         }
 
+        public long FoxDeathCounter { get; private set; } = 0;
+        public long RabbitDeathCounter { get; private set; } = 0;
+
+        public void ResetDeathCounter()
+        {
+            FoxDeathCounter = 0;
+            RabbitDeathCounter = 0;
+        }
 
         // Modify the fields according to the rules
         public Cell[,] Update(Cell[,] field)

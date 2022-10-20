@@ -6,6 +6,6 @@ namespace WarOfFoxesAndRabbits
 {
     public class Component
     {
-        public Vector2 Position { get; protected set; }
+        public Vector2 Position { get; set; }
     }
 }

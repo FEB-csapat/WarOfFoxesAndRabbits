@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection.Emit;
 
 namespace WarOfFoxesAndRabbits
 {
@@ -27,9 +30,15 @@ namespace WarOfFoxesAndRabbits
         private Label foxLabel;
         private Label rabbitLabel;
 
+        private Label foxDeathLabel;
+        private Label rabbitDeathLabel;
+        private Label cordLabel;
+
         private Graph graph;
 
         private PencilType pencilSelected = PencilType.NONE;
+
+        private PencilSizeType pencilSizeSelected = PencilSizeType.SMALL;
 
         #endregion
 
@@ -102,10 +111,37 @@ namespace WarOfFoxesAndRabbits
             Label tickrateLabel = new Label(tickrate.ToString() + " tick", new Vector2(GameVariables.GameCanvasWidth + 102, 166));
             components.Add(tickrateLabel);
 
+
+            // Label to show the fox death counter
+            foxDeathLabel = new Label("Fox death: " + GameManager.Instance.FoxDeathCounter, new Vector2(GameVariables.GameCanvasWidth + 50, 650));
+            components.Add(foxDeathLabel);
+
+            // Label to show the rabbit death counter
+            rabbitDeathLabel = new Label("Rabbit death: " + GameManager.Instance.RabbitDeathCounter, new Vector2(GameVariables.GameCanvasWidth + 50, 700));
+            components.Add(rabbitDeathLabel);
+
+            // Small brush button
+            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 280, 210), () =>
+            {
+                pencilSizeSelected = PencilSizeType.SMALL;
+            }, text: "Small Brush", width: 50, height: 50));
+
+            // Medium brush button
+            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 280, 270), () =>
+            {
+                pencilSizeSelected = PencilSizeType.MEDIUM;
+            }, text: "Medium Brush", width: 50, height: 50));
+
+            // Large brush button
+            components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 280, 330), () =>
+            {
+                pencilSizeSelected = PencilSizeType.LARGE;
+            }, text: "Large Brush", width: 50, height: 50));
+            cordLabel = new Label($"(x: ,y:)", new Vector2(0,0));
             // Increment tickrate button
             components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 160, 150), () =>
             {
-                if (tickrate+2 <= 60)
+                if (tickrate + 2 <= 60)
                 {
                     tickrate += 2;
                 }
@@ -119,7 +155,7 @@ namespace WarOfFoxesAndRabbits
             // Decrement tickrate button
             components.Add(new Button(new Vector2(GameVariables.GameCanvasWidth + 50, 150), () =>
             {
-                if (tickrate-2 > 0)
+                if (tickrate - 2 > 0)
                 {
                     tickrate -= 2;
                 }
@@ -142,7 +178,7 @@ namespace WarOfFoxesAndRabbits
                 tickrate = 60;
                 tickrateLabel.Text = tickrate.ToString() + " tick";
             }, text: "Max", width: 50, height: 50));
-            
+
 
             // Button to draw animals on the field
             Button rabbitPencil = new();
@@ -215,7 +251,7 @@ namespace WarOfFoxesAndRabbits
                 // Icon from https://icons8.com
             }, image: Content.Load<Texture2D>("Images/Grass"), width: 50, height: 50);
             components.Add(grassPencil);
-
+            
             // Button to clear the fields from animals
             Button clearButton = new Button(new Vector2(GameVariables.GameCanvasWidth + 50, 385), () =>
             {
@@ -230,11 +266,12 @@ namespace WarOfFoxesAndRabbits
 
                     }
                 }
+                GameManager.Instance.ResetDeathCounter();
                 generation = 0;
                 generationLabel.Text = "Generation: " + generation;
             }, text: "Clear", width: 150, height: 50);
             components.Add(clearButton);
-
+            
             // Label to count foxes and rabbits
             foxLabel = new Label("Foxes: " + 0, new Vector2(GameVariables.GameCanvasWidth + 50, 330));
             components.Add(foxLabel);
@@ -276,7 +313,7 @@ namespace WarOfFoxesAndRabbits
                         hasWater = true;
                     }
 
-                    field[x, y] = new Cell(new Vector2(x,y), matter: hasWater ? new Water(waterDepth) : null);
+                    field[x, y] = new Cell(new Vector2(x, y), matter: hasWater ? new Water(waterDepth) : null);
                 }
             }
         }
@@ -287,7 +324,7 @@ namespace WarOfFoxesAndRabbits
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();
-            } 
+            }
 
             tickCounter++;
             if (tickCounter % (60 / tickrate) == 0)
@@ -295,7 +332,7 @@ namespace WarOfFoxesAndRabbits
                 if (!paused)
                 {
                     GameManager.Instance.Update(field);
-                    
+
                     #region Updating components
 
                     int rabbitCount = field.CountRabbits();
@@ -303,6 +340,9 @@ namespace WarOfFoxesAndRabbits
 
                     rabbitLabel.Text = "Rabbits: " + rabbitCount;
                     foxLabel.Text = "Foxes: " + foxCount;
+
+                    rabbitDeathLabel.Text = "Rabbit deaths: " + GameManager.Instance.RabbitDeathCounter;
+                    foxDeathLabel.Text = "Fox deaths: " + GameManager.Instance.FoxDeathCounter;
 
                     generation++;
                     if (rabbitCount + foxCount == 0)
@@ -313,7 +353,7 @@ namespace WarOfFoxesAndRabbits
                     {
                         generationLabel.Text = "Generation: " + generation;
                     }
-                    
+
                     if (rabbitCount > 0)
                     {
                         graph.AddData(AnimalType.RABBIT, rabbitCount);
@@ -329,9 +369,9 @@ namespace WarOfFoxesAndRabbits
                     #endregion
                 }
             }
-
             MouseState currentMouseState = Mouse.GetState();
-
+                cordLabel.Position = new Vector2(currentMouseState.X + 10, currentMouseState.Y + 10);
+                cordLabel.Text = $"(x:{currentMouseState.X} ,y:{currentMouseState.Y})";
             #region Mouse clicked
 
             if (previousMouseState.LeftButton == ButtonState.Released
@@ -362,29 +402,99 @@ namespace WarOfFoxesAndRabbits
                     {
                         for (int x = 0; x < GameVariables.CellsVerticallyCount; x++)
                         {
+
                             if (currentMouseState.X >= x * GameVariables.CellSize && currentMouseState.X <= x * GameVariables.CellSize + GameVariables.CellSize
-                            &&  currentMouseState.Y >= y * GameVariables.CellSize && currentMouseState.Y <= y * GameVariables.CellSize + GameVariables.CellSize
-                            )
+                                && currentMouseState.Y >= y * GameVariables.CellSize && currentMouseState.Y <= y * GameVariables.CellSize + GameVariables.CellSize
+                                )
                             {
-                                if (field[x, y].Animal == null)
+                                if (pencilSizeSelected == PencilSizeType.SMALL)
                                 {
-                                    switch (pencilSelected)
+                                    if (field[x, y].Animal == null)
                                     {
-                                        case PencilType.BUNNY:
-                                            field[x, y].Animal = new Rabbit();
-                                            break;
-                                        case PencilType.FOX:
-                                            field[x, y].Animal = new Fox();
-                                            break;
-                                        case PencilType.WALL:
-                                            field[x, y].Matter = new Wall();
-                                            break;
-                                        case PencilType.WATER:
-                                            field[x, y].Matter = new Water(GameVariables.minWaterDepth);
-                                            break;
-                                        case PencilType.GRASS:
-                                            field[x, y].Matter = new Grass();
-                                            break;
+                                        switch (pencilSelected)
+                                        {
+                                            case PencilType.BUNNY:
+                                                field[x, y].Animal = new Rabbit();
+                                                break;
+                                            case PencilType.FOX:
+                                                field[x, y].Animal = new Fox();
+                                                break;
+                                            case PencilType.WALL:
+                                                field[x, y].Matter = new Wall();
+                                                break;
+                                            case PencilType.WATER:
+                                                field[x, y].Matter = new Water(GameVariables.minWaterDepth);
+                                                break;
+                                            case PencilType.GRASS:
+                                                field[x, y].Matter = new Grass();
+                                                break;
+                                        }
+                                    }
+                                }
+
+                                else if (pencilSizeSelected == PencilSizeType.MEDIUM)
+                                {
+                                    for (int py = -1; py <= 1; py++)
+                                    {
+                                        for (int px = -1; px <= 1; px++)
+                                        {
+                                            if (y + py >= 0 && x + px >= 0
+                                            && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
+                                            && field[x, y].Animal == null)
+                                            {
+                                                switch (pencilSelected)
+                                                {
+                                                    case PencilType.BUNNY:
+                                                        field[x+px, y+py].Animal = new Rabbit();
+                                                        break;
+                                                    case PencilType.FOX:
+                                                        field[x + px, y + py].Animal = new Fox();
+                                                        break;
+                                                    case PencilType.WALL:
+                                                        field[x + px, y + py].Matter = new Wall();
+                                                        break;
+                                                    case PencilType.WATER:
+                                                        field[x + px, y + py].Matter = new Water(GameVariables.minWaterDepth);
+                                                        break;
+                                                    case PencilType.GRASS:
+                                                        field[x + px, y + py].Matter = new Grass();
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                else if (pencilSizeSelected == PencilSizeType.LARGE)
+                                {
+                                    for (int py = -2; py <= 2; py++)
+                                    {
+                                        for (int px = -2; px <= 2; px++)
+                                        {
+                                            if (y + py >= 0 && x + px >= 0
+                                            && y + py < GameVariables.CellsVerticallyCount && x + px < GameVariables.CellsHorizontallyCount
+                                            && field[x, y].Animal == null)
+                                            {
+                                                switch (pencilSelected)
+                                                {
+                                                    case PencilType.BUNNY:
+                                                        field[x + px, y + py].Animal = new Rabbit();
+                                                        break;
+                                                    case PencilType.FOX:
+                                                        field[x + px, y + py].Animal = new Fox();
+                                                        break;
+                                                    case PencilType.WALL:
+                                                        field[x + px, y + py].Matter = new Wall();
+                                                        break;
+                                                    case PencilType.WATER:
+                                                        field[x + px, y + py].Matter = new Water(GameVariables.minWaterDepth);
+                                                        break;
+                                                    case PencilType.GRASS:
+                                                        field[x + px, y + py].Matter = new Grass();
+                                                        break;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -459,7 +569,10 @@ namespace WarOfFoxesAndRabbits
             }
 
             #endregion
-
+            if (cordLabel.Position.X-10<=GameVariables.GameCanvasWidth)
+            {
+                _spriteBatch.DrawString(spriteFont, cordLabel.Text, new Vector2(cordLabel.Position.X, cordLabel.Position.Y), Color.Black);
+            }
             _spriteBatch.End();
 
             base.Draw(gameTime);
