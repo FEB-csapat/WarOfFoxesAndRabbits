@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -502,5 +503,19 @@ namespace WarOfFoxesAndRabbits
                 }
             }
         }
+
+
+
+        public void Draw(SpriteBatch spriteBatch, Texture2D rectangleBlock)
+        {
+            for (int y = 0; y < GameConstants.CellsVerticallyCount; y++)
+            {
+                for (int x = 0; x < GameConstants.CellsVerticallyCount; x++)
+                {
+                    spriteBatch.Draw(rectangleBlock, new Rectangle(x * GameConstants.CellSize, y * GameConstants.CellSize, GameConstants.CellSize, GameConstants.CellSize), field[x,y].Color);
+                }
+            }
+        }
+
     }
 }

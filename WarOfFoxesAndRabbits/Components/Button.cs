@@ -17,11 +17,10 @@ namespace WarOfFoxesAndRabbits
 
         public Texture2D ImageTexture {get; private set;}
 
-        public bool IsSelected { get; set;}
 
         public Button() { }
 
-        public Button(Vector2 position, Action onClick, string text = "", Texture2D image = null, int width = 100, int height = 50, bool isSelected = false)
+        public Button(Vector2 position, Action onClick, string text = "", Texture2D image = null, int width = 100, int height = 50, Object id = null)
         {
             this.Text = text;
             this.OnClick = onClick;
@@ -29,7 +28,8 @@ namespace WarOfFoxesAndRabbits
             this.ImageTexture = image;
             this.Width = width;
             this.Height = height;
-            this.IsSelected = isSelected;
+
+            this.Id = id;
         }
     }
 }
