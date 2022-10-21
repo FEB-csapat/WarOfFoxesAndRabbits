@@ -12,12 +12,20 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\Font.spritefont" />
+    <None Remove="Content\Images\Pencil2.png" />
+    <None Remove="Content\Images\Pencil3.png" />
     <None Remove="Content\Images\Wall.png" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Font.spritefont">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Pencil2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Pencil3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\Wall.png">

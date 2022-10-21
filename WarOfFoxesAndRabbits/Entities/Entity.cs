@@ -2,16 +2,8 @@
 
 namespace WarOfFoxesAndRabbits
 {
-    public abstract class Entity
+    public interface IEntity
     {
-        public Entity()
-        {
-
-        }
-
-        abstract public Color Color
-        {
-            get;
-        }
+        public Color Color{ get; }
     }
 }

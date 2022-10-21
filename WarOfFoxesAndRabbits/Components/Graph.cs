@@ -21,19 +21,19 @@ namespace WarOfFoxesAndRabbits
 
         public void AddData(AnimalType animalType, int count)
         {
-            int max = GameVariables.CellsHorizontallyCount * GameVariables.CellsVerticallyCount;
+            int max = GameConstants.CellsHorizontallyCount * GameConstants.CellsVerticallyCount;
 
-            double percent = (double) count / max;
-            double posY = Position.Y + Height - GameVariables.GraphRectSize - percent * Height * 10;
+            double percent = (double)count / max;
+            double posY = Position.Y + Height - GameConstants.GraphRectSize - percent * Height * 10;
 
-            datas.Add(new GraphData(animalType, new Vector2( Position.X + Width , (float) posY) ));
+            datas.Add(new GraphData(animalType, new Vector2(Position.X + Width, (float)posY)));
         }
 
         public void Update()
         {
-            for (int i = 0; i< datas.Count; i++)
+            for (int i = 0; i < datas.Count; i++)
             {
-                if (datas[i].Position.X < Position.X+GameVariables.GraphRectSize)
+                if (datas[i].Position.X < Position.X + GameConstants.GraphRectSize)
                 {
                     datas.RemoveAt(i);
                 }

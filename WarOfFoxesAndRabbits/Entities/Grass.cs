@@ -9,7 +9,7 @@ namespace WarOfFoxesAndRabbits
 
         public Grass()
         {
-            Stage = GameVariables.Random.Next(0, 3);
+            Stage = GameConstants.Random.Next(0, 3);
         }
 
         public void Grow()

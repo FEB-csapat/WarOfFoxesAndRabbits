@@ -19,7 +19,7 @@ namespace WarOfFoxesAndRabbits
 
         private Color MapColor()
         {
-            double h =1- GameVariables.minWaterDepth;
+            double h =1- GameConstants.minWaterDepth;
 
             double p = (1- depth) / h;
 
