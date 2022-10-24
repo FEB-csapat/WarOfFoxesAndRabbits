@@ -9,7 +9,7 @@ namespace WarOfFoxesAndRabbits
 
         public Grass()
         {
-            Stage = GameVariables.Random.Next(0, 3);
+            Stage = GameConstants.Random.Next(0, 3);
         }
 
         public void Grow()
@@ -23,7 +23,7 @@ namespace WarOfFoxesAndRabbits
                 Stage = MaxStage;
             }
         }
-        
+
         public void GrassEaten(int amount)
         {
             if (Stage - amount < 0)
@@ -32,7 +32,7 @@ namespace WarOfFoxesAndRabbits
             }
             else
             {
-                Stage-=amount;
+                Stage -= amount;
             }
         }
 

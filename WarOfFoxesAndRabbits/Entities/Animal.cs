@@ -1,12 +1,9 @@
-﻿namespace WarOfFoxesAndRabbits
+﻿using Microsoft.Xna.Framework;
+
+namespace WarOfFoxesAndRabbits
 {
-    public abstract class Animal : Entity
+    public abstract class Animal : IEntity
     {
-        protected void Initialize()
-        {
-            Age = 0;
-            Sate = InitialSate;
-        }
         public int Sate { get; protected set; }
         protected int InitialSate { get; set; }
         protected int MaxSate { get; set; }
@@ -17,6 +14,13 @@
         public bool HasMoved { get; set; } = false;
         public bool HasProduced { get; set; } = false;
         public bool HasAte { get; set; } = false;
+        public abstract Color Color { get; }
+
+        protected void Initialize()
+        {
+            Age = 0;
+            Sate = InitialSate;
+        }
 
         public virtual bool IsDead() => Sate <= 0 || Age >= MaxAge;
 
