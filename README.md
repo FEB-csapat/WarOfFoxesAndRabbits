@@ -2,8 +2,9 @@
 
 ### Game of life-ish simulation game of the Lotka-Volterra predator-prey model.
 
-## Libraries used:
+## Third party sources used:
 - [FastNoiseLite](https://github.com/Auburn/FastNoiseLite)
+- [Icons8](https://icons8.com/)
 
 ## License
 
