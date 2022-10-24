@@ -23,7 +23,7 @@ namespace WarOfFoxesAndRabbits
                 Stage = MaxStage;
             }
         }
-        
+
         public void GrassEaten(int amount)
         {
             if (Stage - amount < 0)
@@ -32,7 +32,7 @@ namespace WarOfFoxesAndRabbits
             }
             else
             {
-                Stage-=amount;
+                Stage -= amount;
             }
         }
 

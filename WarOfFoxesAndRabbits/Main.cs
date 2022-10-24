@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 
 namespace WarOfFoxesAndRabbits
 {
@@ -12,17 +11,14 @@ namespace WarOfFoxesAndRabbits
         private Texture2D rectangleBlock;
         private SpriteFont spriteFont;
 
-
         private MouseState previousMouseState;
-
-        
 
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = GameConstants.WindowWidth,
-                PreferredBackBufferHeight = GameConstants.WindowHeight
+                PreferredBackBufferWidth = GameConstants.WINDOW_WIDTH,
+                PreferredBackBufferHeight = GameConstants.WINDOW_HEIGHT
             };
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -31,32 +27,28 @@ namespace WarOfFoxesAndRabbits
 
         protected override void Initialize()
         {
-            Window.Title = GameConstants.Title;
+            Window.Title = GameConstants.TITLE;
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-
-            spriteFont = Content.Load<SpriteFont>("Fonts/Arial");
-
-            ComponentManager.Instance.Initialize(Content);
-
             rectangleBlock = new Texture2D(GraphicsDevice, 1, 1);
             Color xnaColorBorder = new Color(255, 255, 255);
             rectangleBlock.SetData(new[] { xnaColorBorder });
+            spriteFont = Content.Load<SpriteFont>("Fonts/Arial");
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            ComponentManager.Instance.Initialize(Content);
             GameManager.Instance.Initialize();
         }
-
-
 
         protected override void Update(GameTime gameTime)
         {
             // If escape button is pressed
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+            || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();
             }
@@ -84,7 +76,7 @@ namespace WarOfFoxesAndRabbits
             }
 
             // Mouse being held
-            if (currentMouseState.LeftButton == ButtonState.Pressed )
+            if (currentMouseState.LeftButton == ButtonState.Pressed)
             {
 
                 ComponentManager.Instance.CheckIfCanDraw(currentMouseState);
@@ -101,7 +93,7 @@ namespace WarOfFoxesAndRabbits
             GraphicsDevice.Clear(Color.DarkGray);
             spriteBatch.Begin();
 
-            GameManager.Instance.Draw(spriteBatch,rectangleBlock,spriteFont);
+            GameManager.Instance.Draw(spriteBatch, rectangleBlock);
 
             ComponentManager.Instance.Draw(spriteBatch, rectangleBlock, spriteFont);
 

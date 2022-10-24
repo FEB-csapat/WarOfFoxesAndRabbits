@@ -15,12 +15,13 @@ namespace WarOfFoxesAndRabbits
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public Texture2D ImageTexture {get; private set;}
+        public Texture2D ImageTexture { get; private set; }
 
 
         public Button() { }
 
-        public Button(Vector2 position, Action onClick, string text = "", Texture2D image = null, int width = 100, int height = 50, Object id = null)
+        public Button(Vector2 position, Action onClick, string text = "", Texture2D image = null,
+            int width = 100, int height = 50, Object id = null)
         {
             this.Text = text;
             this.OnClick = onClick;

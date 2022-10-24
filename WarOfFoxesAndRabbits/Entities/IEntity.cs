@@ -4,6 +4,6 @@ namespace WarOfFoxesAndRabbits
 {
     public interface IEntity
     {
-        public Color Color{ get; }
+        public Color Color { get; }
     }
 }

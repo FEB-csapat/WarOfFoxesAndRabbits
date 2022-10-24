@@ -21,10 +21,10 @@ namespace WarOfFoxesAndRabbits
 
         public void AddData(AnimalType animalType, int count)
         {
-            int max = GameConstants.CellsHorizontallyCount * GameConstants.CellsVerticallyCount;
+            int max = GameConstants.CELLS_HORIZONTALLY_COUNT * GameConstants.CELLS_VERTICALLY_COUNT;
 
             double percent = (double)count / max;
-            double posY = Position.Y + Height - GameConstants.GraphRectSize - percent * Height * 10;
+            double posY = Position.Y + Height - GameConstants.GRAPH_RECT_SIZE - percent * Height * 10;
 
             datas.Add(new GraphData(animalType, new Vector2(Position.X + Width, (float)posY)));
         }
@@ -33,7 +33,7 @@ namespace WarOfFoxesAndRabbits
         {
             for (int i = 0; i < datas.Count; i++)
             {
-                if (datas[i].Position.X < Position.X + GameConstants.GraphRectSize)
+                if (datas[i].Position.X < Position.X + GameConstants.GRAPH_RECT_SIZE)
                 {
                     datas.RemoveAt(i);
                 }

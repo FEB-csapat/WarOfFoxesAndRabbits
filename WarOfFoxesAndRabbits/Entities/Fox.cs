@@ -7,7 +7,6 @@ namespace WarOfFoxesAndRabbits
         public Fox() : base()
         {
             InitialSate = 50;
-
             MaxSate = 100;
             MaxAge = 250;
 

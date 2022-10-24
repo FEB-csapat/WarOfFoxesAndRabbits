@@ -16,7 +16,7 @@ namespace WarOfFoxesAndRabbits
         public override Color Color => Color.White;
 
         public override bool CanBreed() => Sate >= 4;
-        
+
         public override bool CanEat() => Sate < 7;
 
         public void Eat(int amount)

@@ -7,7 +7,7 @@ using System.Linq;
 namespace WarOfFoxesAndRabbits
 {
     // Manages the game's rules
-    public class GameManager
+    public sealed class GameManager
     {
         #region Handlers
 
@@ -15,7 +15,8 @@ namespace WarOfFoxesAndRabbits
         {
             public abstract Cell[,] Manage(Cell[,] field, int x, int y);
 
-            protected void Birth<T>(ref List<Cell> surroundingCellsToBirth, ref Cell cellWithFatherAnimal, ref Animal fatherAnimal) where T : Animal
+            protected void Birth<T>(ref List<Cell> surroundingCellsToBirth,
+                ref Cell cellWithFatherAnimal, ref Animal fatherAnimal) where T : Animal
             {
                 if (fatherAnimal != null && surroundingCellsToBirth.Count > 0)
                 {
@@ -93,7 +94,7 @@ namespace WarOfFoxesAndRabbits
                         for (int px = -1; px <= 1; px++)
                         {
                             if (y + py >= 0 && x + px >= 0
-                            && y + py < GameConstants.CellsVerticallyCount && x + px < GameConstants.CellsHorizontallyCount
+                            && y + py < GameConstants.CELLS_VERTICALLY_COUNT && x + px < GameConstants.CELLS_HORIZONTALLY_COUNT
                             && (px != 0 || py != 0))
                             {
                                 #region Find cells to move
@@ -166,7 +167,8 @@ namespace WarOfFoxesAndRabbits
         private class FoxHandler : AnimalHandler
         {
             // Fills the surroundingCells lists to perform actions latter on it
-            private void FindSurroundingCells(Cell[,] field, int x, int y, out List<Cell> surroundingCellsToMove, out List<Cell> surroundingCellsToHunt, ref Animal fatherFox)
+            private void FindSurroundingCells(Cell[,] field, int x, int y,
+                out List<Cell> surroundingCellsToMove, out List<Cell> surroundingCellsToHunt, ref Animal fatherFox)
             {
                 surroundingCellsToMove = new List<Cell>();
                 surroundingCellsToHunt = new List<Cell>();
@@ -187,7 +189,7 @@ namespace WarOfFoxesAndRabbits
                     for (int px = -vision; px <= vision; px++)
                     {
                         if (y + py >= 0 && x + px >= 0
-                        && y + py < GameConstants.CellsVerticallyCount && x + px < GameConstants.CellsHorizontallyCount
+                        && y + py < GameConstants.CELLS_VERTICALLY_COUNT && x + px < GameConstants.CELLS_HORIZONTALLY_COUNT
                         && (px != 0 || py != 0))
                         {
                             // Find cells to move
@@ -259,10 +261,12 @@ namespace WarOfFoxesAndRabbits
                         // has moved successfully
                         if (nextCellWhereFoxMoved != null)
                         {
-                            FindSurroundingCells(field, nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY, out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
+                            FindSurroundingCells(field, nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY,
+                                out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
                             if (surroundingCellsToMove.Count > 0)
                             {
-                                nextCellWhereFoxMoved = Move(ref surroundingCellsToMove, ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                                nextCellWhereFoxMoved = Move(ref surroundingCellsToMove,
+                                    ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
                             }
                         }
                     }
@@ -274,19 +278,22 @@ namespace WarOfFoxesAndRabbits
                         // has moved successfully
                         if (nextCellWhereFoxMoved != null)
                         {
-                            FindSurroundingCells(field, nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY, out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
+                            FindSurroundingCells(field, nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY,
+                                out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
 
                             //Check if it can hunt or not
                             if (surroundingCellsToHunt.Count > 0)
                             {
-                                nextCellWhereFoxMoved = Hunt(ref surroundingCellsToHunt, ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                                nextCellWhereFoxMoved = Hunt(ref surroundingCellsToHunt,
+                                    ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
                             }
                             else
                             {
                                 //It can't hunt, so it makes the second move
                                 if (surroundingCellsToMove.Count > 0)
                                 {
-                                    nextCellWhereFoxMoved = Move(ref surroundingCellsToMove, ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                                    nextCellWhereFoxMoved = Move(ref surroundingCellsToMove,
+                                        ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
                                 }
                             }
                         }
@@ -372,7 +379,7 @@ namespace WarOfFoxesAndRabbits
 
         #region Field
 
-        private readonly Cell[,] field = new Cell[GameConstants.CellsHorizontallyCount, GameConstants.CellsVerticallyCount];
+        private readonly Cell[,] field = new Cell[GameConstants.CELLS_HORIZONTALLY_COUNT, GameConstants.CELLS_VERTICALLY_COUNT];
 
 
         public void SetFieldCellAnimal(int x, int y, Animal animal)
@@ -392,9 +399,9 @@ namespace WarOfFoxesAndRabbits
 
         public void ClearAnimals()
         {
-            for (int y = 0; y < GameConstants.CellsVerticallyCount; y++)
+            for (int y = 0; y < GameConstants.CELLS_VERTICALLY_COUNT; y++)
             {
-                for (int x = 0; x < GameConstants.CellsVerticallyCount; x++)
+                for (int x = 0; x < GameConstants.CELLS_VERTICALLY_COUNT; x++)
                 {
                     if (field[x, y].Animal is not null)
                     {
@@ -413,15 +420,15 @@ namespace WarOfFoxesAndRabbits
                 noise.SetSeed(GameConstants.Random.Next(0, 1000000));
             }
 
-            for (int y = 0; y < GameConstants.CellsVerticallyCount; y++)
+            for (int y = 0; y < GameConstants.CELLS_VERTICALLY_COUNT; y++)
             {
-                for (int x = 0; x < GameConstants.CellsVerticallyCount; x++)
+                for (int x = 0; x < GameConstants.CELLS_VERTICALLY_COUNT; x++)
                 {
                     bool hasWater = false;
 
                     float waterDepth = noise.GetNoise(x, y);
 
-                    if (IsLakeEnabled && waterDepth >= GameConstants.minWaterDepth)
+                    if (IsLakeEnabled && waterDepth >= GameConstants.MINT_WATER_DEPTH)
                     {
                         hasWater = true;
                     }
@@ -465,9 +472,9 @@ namespace WarOfFoxesAndRabbits
         {
             RabbitCounter = 0;
             FoxCounter = 0;
-            for (int y = 0; y < GameConstants.CellsVerticallyCount; y++)
+            for (int y = 0; y < GameConstants.CELLS_VERTICALLY_COUNT; y++)
             {
-                for (int x = 0; x < GameConstants.CellsHorizontallyCount; x++)
+                for (int x = 0; x < GameConstants.CELLS_HORIZONTALLY_COUNT; x++)
                 {
                     if (field[x, y].Animal != null)
                     {
@@ -491,9 +498,9 @@ namespace WarOfFoxesAndRabbits
             }
 
             // Reset properties of animals
-            for (int y = 0; y < GameConstants.CellsVerticallyCount; y++)
+            for (int y = 0; y < GameConstants.CELLS_VERTICALLY_COUNT; y++)
             {
-                for (int x = 0; x < GameConstants.CellsHorizontallyCount; x++)
+                for (int x = 0; x < GameConstants.CELLS_HORIZONTALLY_COUNT; x++)
                 {
                     if (field[x, y].Animal != null)
                     {
@@ -508,11 +515,13 @@ namespace WarOfFoxesAndRabbits
 
         public void Draw(SpriteBatch spriteBatch, Texture2D rectangleBlock)
         {
-            for (int y = 0; y < GameConstants.CellsVerticallyCount; y++)
+            for (int y = 0; y < GameConstants.CELLS_VERTICALLY_COUNT; y++)
             {
-                for (int x = 0; x < GameConstants.CellsVerticallyCount; x++)
+                for (int x = 0; x < GameConstants.CELLS_VERTICALLY_COUNT; x++)
                 {
-                    spriteBatch.Draw(rectangleBlock, new Rectangle(x * GameConstants.CellSize, y * GameConstants.CellSize, GameConstants.CellSize, GameConstants.CellSize), field[x,y].Color);
+                    spriteBatch.Draw(rectangleBlock,
+                        new Rectangle(x * GameConstants.CELL_SIZE, y * GameConstants.CELL_SIZE,
+                                      GameConstants.CELL_SIZE, GameConstants.CELL_SIZE), field[x, y].Color);
                 }
             }
         }

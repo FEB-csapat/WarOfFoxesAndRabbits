@@ -27,7 +27,7 @@ namespace WarOfFoxesAndRabbits
 
         public void Update()
         {
-            Position += new Vector2(-GameConstants.GraphRectSize, 0);
+            Position += new Vector2(-GameConstants.GRAPH_RECT_SIZE, 0);
         }
     }
 }
