@@ -15,8 +15,8 @@ namespace WarOfFoxesAndRabbits
         {
             public abstract Cell[,] Manage(Cell[,] field, int x, int y);
 
-            protected void Birth(ref List<Cell> surroundingCellsToBirth,
-                ref T mother, ref T father)
+            protected void Birth(List<Cell> surroundingCellsToBirth,
+                T mother, T father)
             {
                 if (father != null && surroundingCellsToBirth.Count > 0)
                 {
@@ -28,7 +28,7 @@ namespace WarOfFoxesAndRabbits
                 }
             }
 
-            protected Cell Move(ref List<Cell> surroundingCellsToMove, ref Cell cellWithAnimal)
+            protected Cell Move(List<Cell> surroundingCellsToMove, Cell cellWithAnimal)
             {
                 int ran = GameConstants.Random.Next(0, surroundingCellsToMove.Count);
                 surroundingCellsToMove[ran].Animal = cellWithAnimal.Animal;
@@ -125,7 +125,7 @@ namespace WarOfFoxesAndRabbits
                     if (emptySurroundingCells.Count != 0)
                     {
                         Rabbit motherRabbit = (Rabbit)field[x, y].Animal;
-                        Birth(ref emptySurroundingCells, ref motherRabbit, ref fatherRabbit);
+                        Birth(ref emptySurroundingCells, motherRabbit, fatherRabbit);
                     }
 
                     #region Move rabbit
@@ -155,7 +155,7 @@ namespace WarOfFoxesAndRabbits
                             optionalCells = emptySurroundingCells;
                         }
 
-                        Move(ref optionalCells, ref field[x, y]);
+                        Move(optionalCells, field[x, y]);
                     }
                     #endregion
                 }
@@ -223,7 +223,7 @@ namespace WarOfFoxesAndRabbits
                 }
             }
 
-            private Cell Hunt(ref List<Cell> surroundingCellsToHunt, ref Cell cellWithFox)
+            private Cell Hunt(List<Cell> surroundingCellsToHunt, Cell cellWithFox)
             {
                 int ran = GameConstants.Random.Next(0, surroundingCellsToHunt.Count);
                 (cellWithFox.Animal as Fox).Eat();
@@ -255,13 +255,13 @@ namespace WarOfFoxesAndRabbits
                     if (surroundingCellsToMove.Count > 0)
                     {
                         Fox motherFox = (Fox)field[x, y].Animal;
-                        Birth(ref surroundingCellsToMove, ref motherFox, ref fatherFox);
+                        Birth(ref surroundingCellsToMove, motherFox, fatherFox);
                     }
 
                     // Check if there are any rabbits to hunt in the surrounding cells
                     if (surroundingCellsToHunt.Count > 0)
                     {
-                        nextCellWhereFoxMoved = Hunt(ref surroundingCellsToHunt, ref field[x, y]);
+                        nextCellWhereFoxMoved = Hunt(surroundingCellsToHunt, field[x, y]);
 
                         // has moved successfully
                         if (nextCellWhereFoxMoved != null)
@@ -270,15 +270,15 @@ namespace WarOfFoxesAndRabbits
                                 out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
                             if (surroundingCellsToMove.Count > 0)
                             {
-                                nextCellWhereFoxMoved = Move(ref surroundingCellsToMove,
-                                    ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                                nextCellWhereFoxMoved = Move(surroundingCellsToMove,
+                                    field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
                             }
                         }
                     }
                     // There were no rabbits in the surrounding cells, so just move if there is a cell to move
                     else if (surroundingCellsToMove.Count > 0)
                     {
-                        nextCellWhereFoxMoved = Move(ref surroundingCellsToMove, ref field[x, y]);
+                        nextCellWhereFoxMoved = Move(surroundingCellsToMove, field[x, y]);
 
                         // has moved successfully
                         if (nextCellWhereFoxMoved != null)
@@ -289,16 +289,16 @@ namespace WarOfFoxesAndRabbits
                             //Check if it can hunt or not
                             if (surroundingCellsToHunt.Count > 0)
                             {
-                                nextCellWhereFoxMoved = Hunt(ref surroundingCellsToHunt,
-                                    ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                                nextCellWhereFoxMoved = Hunt(surroundingCellsToHunt,
+                                    field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
                             }
                             else
                             {
                                 //It can't hunt, so it makes the second move
                                 if (surroundingCellsToMove.Count > 0)
                                 {
-                                    nextCellWhereFoxMoved = Move(ref surroundingCellsToMove,
-                                        ref field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                                    nextCellWhereFoxMoved = Move(surroundingCellsToMove,
+                                        field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
                                 }
                             }
                         }
@@ -515,7 +515,6 @@ namespace WarOfFoxesAndRabbits
                 }
             }
         }
-
 
 
         public void Draw(SpriteBatch spriteBatch, Texture2D rectangleBlock)

@@ -1,9 +1,13 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace WarOfFoxesAndRabbits
 {
     public enum AnimalType
     {
-        FOX, RABBIT
+        RABBIT, FOX
     }
 }

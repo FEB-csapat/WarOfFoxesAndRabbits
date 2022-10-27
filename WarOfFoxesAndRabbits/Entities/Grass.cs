@@ -41,18 +41,6 @@ namespace WarOfFoxesAndRabbits
             get
             {
                 return MapColor();
-                /*
-                switch (Stage)
-                {
-                    case > 0 and < 1:
-                        return new Color(130, 200, 0);
-                    case >= 1 and < 2:
-                        return new Color(111, 183, 0);
-                    case >= 2:
-                        return new Color(0, 183, 0);
-                }
-                return Color.Black;
-                */
             }
         }
 
