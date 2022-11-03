@@ -24,7 +24,7 @@ namespace WarOfFoxesAndRabbits
         }
         #endregion
 
-        #region Variables for components
+        #region Variables
 
         private readonly List<Panel> panels = new();
         private readonly List<Button> pencilTypeButtons = new();
@@ -360,18 +360,16 @@ namespace WarOfFoxesAndRabbits
 
         public void CheckIfButtonWasClicked(MouseState currentMouseState)
         {
-            foreach (Button component in GetAllButtons().Cast<Button>())
+            foreach (Button button in GetAllButtons().Cast<Button>())
             {
-                if (component is Button button)
+                if(currentMouseState.X >= button.Position.X
+                && currentMouseState.X <= button.Position.X + button.Width
+                && currentMouseState.Y >= button.Position.Y
+                && currentMouseState.Y <= button.Position.Y + button.Height)
                 {
-                    if (currentMouseState.X >= button.Position.X
-                    && currentMouseState.X <= button.Position.X + button.Width
-                    && currentMouseState.Y >= button.Position.Y
-                    && currentMouseState.Y <= button.Position.Y + button.Height)
-                    {
-                        button.OnClick();
-                    }
+                    button.OnClick();
                 }
+                
             }
         }
 
@@ -385,7 +383,7 @@ namespace WarOfFoxesAndRabbits
                     if (y + py >= 0 && x + px >= 0
                     && y + py < GameConstants.CELLS_VERTICALLY_COUNT
                     && x + px < GameConstants.CELLS_HORIZONTALLY_COUNT
-                    && GameManager.Instance.GetFieldCell(x, y).Animal == null)
+                    && !GameManager.Instance.IsAnimalOnCell(x, y))
                     {
                         switch (pencilSelected)
                         {

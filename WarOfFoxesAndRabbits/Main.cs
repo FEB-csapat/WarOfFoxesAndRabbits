@@ -78,7 +78,6 @@ namespace WarOfFoxesAndRabbits
             // Mouse being held
             if (currentMouseState.LeftButton == ButtonState.Pressed)
             {
-
                 ComponentManager.Instance.CheckIfCanDraw(currentMouseState);
             }
 
