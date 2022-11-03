@@ -1,6 +1,6 @@
 # War of foxes and rabbits
 
-### Game of life-ish simulation game of the Lotka-Volterra predator-prey model.
+### Game of life-ish simulation game of the Lotka-Volterra predator-prey model, written in the Monogame framework.
 
 ## Third party sources used:
 - [FastNoiseLite](https://github.com/Auburn/FastNoiseLite)
