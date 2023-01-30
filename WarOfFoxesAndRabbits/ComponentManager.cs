@@ -49,7 +49,7 @@ namespace WarOfFoxesAndRabbits
 
         private Label foxDeathLabel;
         private Label rabbitDeathLabel;
-        private Label coordLabel;
+        private CoordinationLabel coordinationLabel;
 
         private Graph graph;
 
@@ -61,7 +61,6 @@ namespace WarOfFoxesAndRabbits
 
         public void Initialize(ContentManager content)
         {
-            // TODO: Generation counter resets with clear button
             generationLabel = new Label("Generation: " + GameManager.Instance.Generation,
                 new Vector2(GameConstants.GAME_CANVAS_WIDTH + 50, 4));
             components.Add(generationLabel);
@@ -244,10 +243,10 @@ namespace WarOfFoxesAndRabbits
             panels.Add(pencilPanel);
             panels.Add(graphPanel);
 
-            coordLabel = new Label($"(x: ,y:)", new Vector2(0, 0));
+            coordinationLabel = new CoordinationLabel($"(x: ,y:)", new Vector2(0, 0));
         }
 
-        public void Update()
+        public void Update(MouseState currentMouseState)
         {
             rabbitLabel.Text = "Rabbits: " + GameManager.Instance.RabbitCounter;
             foxLabel.Text = "Foxes: " + GameManager.Instance.FoxCounter;
@@ -276,85 +275,42 @@ namespace WarOfFoxesAndRabbits
             }
 
             graph.Update();
-        }
 
-        public void UpdateCoordinationLabel(MouseState currentMouseState)
-        {
-            coordLabel.Position = new Vector2(currentMouseState.X + 12, currentMouseState.Y + 12);
-            coordLabel.Text = $"({1 + currentMouseState.X / GameConstants.CELL_SIZE}," +
-                              $" {1 + currentMouseState.Y / GameConstants.CELL_SIZE})";
+            coordinationLabel.UpdateLabel(currentMouseState);
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D rectangleBlock, SpriteFont spriteFont)
         {
             foreach (Panel panel in panels)
             {
-                spriteBatch.Draw(rectangleBlock,
-                    new Rectangle((int)panel.Position.X, (int)panel.Position.Y, panel.Width, panel.Height), panel.Color);
+                panel.Draw(spriteBatch, rectangleBlock);
             }
 
             foreach (Button button in pencilTypeButtons)
             {
-                if (button.Id != null && (PencilType)button.Id == pencilSelected)
-                {
-                    spriteBatch.Draw(rectangleBlock,
-                        new Rectangle(((int)button.Position.X) - 4, ((int)button.Position.Y) - 4, button.Width + 6, button.Height + 6), Color.Black);
-                }
-                spriteBatch.Draw(button.ImageTexture, button.Position, Color.White);
+                button.Draw(spriteBatch, rectangleBlock, pencilSelected);
             }
 
             foreach (Button button in pencilSizeButtons)
             {
-                if (button.Id != null && (PencilSizeType)button.Id == pencilSizeSelected)
-                {
-                    spriteBatch.Draw(rectangleBlock,
-                        new Rectangle(((int)button.Position.X) - 4, ((int)button.Position.Y) - 4, button.Width + 6, button.Height + 6), Color.Black);
-                }
-                spriteBatch.Draw(button.ImageTexture, button.Position, Color.White);
+                button.Draw(spriteBatch, rectangleBlock, pencilSizeSelected);
             }
 
             foreach (Component component in components)
             {
                 if (component is Button button)
                 {
-                    spriteBatch.Draw(rectangleBlock,
-                        new Rectangle((int)button.Position.X, (int)button.Position.Y, button.Width, button.Height), Color.Gray);
-
-                    spriteBatch.DrawString(spriteFont, button.Text,
-                        new Vector2(button.Position.X + button.Width / 4, button.Position.Y + button.Height / 3), Color.Black);
+                    button.Draw(spriteBatch, rectangleBlock, spriteFont);
                 }
                 else if (component is Label label)
                 {
-                    spriteBatch.DrawString(spriteFont, label.Text,
-                        new Vector2(component.Position.X, component.Position.Y), Color.Black);
+                    label.Draw(spriteBatch, spriteFont);
                 }
             }
 
-            #region Draw graph
+            graph.Draw(spriteBatch, rectangleBlock);
 
-
-            foreach (GraphData d in graph.Datas)
-            {
-                spriteBatch.Draw(rectangleBlock,
-                    new Rectangle((int)d.Position.X, (int)d.Position.Y,
-                                  GameConstants.GRAPH_RECT_SIZE, GameConstants.GRAPH_RECT_SIZE),
-                                  d.Color);
-            }
-
-            #endregion
-
-            #region Draw coordinate label
-
-            if (coordLabel.Position.X - 10 <= GameConstants.GAME_CANVAS_WIDTH
-            && coordLabel.Position.X - 10 >= 0
-            && coordLabel.Position.Y - 10 >= 0
-            && coordLabel.Position.Y - 10 <= GameConstants.GAME_CANVAS_WIDTH)
-            {
-                spriteBatch.DrawString(spriteFont, coordLabel.Text,
-                    new Vector2(coordLabel.Position.X, coordLabel.Position.Y), Color.Black);
-            }
-
-            #endregion
+            coordinationLabel.DrawCoordinate(spriteBatch, rectangleBlock, spriteFont);
         }
 
 
@@ -362,14 +318,13 @@ namespace WarOfFoxesAndRabbits
         {
             foreach (Button button in GetAllButtons().Cast<Button>())
             {
-                if(currentMouseState.X >= button.Position.X
+                if (currentMouseState.X >= button.Position.X
                 && currentMouseState.X <= button.Position.X + button.Width
                 && currentMouseState.Y >= button.Position.Y
                 && currentMouseState.Y <= button.Position.Y + button.Height)
                 {
                     button.OnClick();
                 }
-                
             }
         }
 
@@ -397,7 +352,7 @@ namespace WarOfFoxesAndRabbits
                                 GameManager.Instance.SetFieldCellMatter(x + px, y + py, new Wall());
                                 break;
                             case PencilType.WATER:
-                                GameManager.Instance.SetFieldCellMatter(x + px, y + py, new Water(GameConstants.MINT_WATER_DEPTH));
+                                GameManager.Instance.SetFieldCellMatter(x + px, y + py, new Water(GameConstants.MIN_WATER_DEPTH));
                                 break;
                             case PencilType.GRASS:
                                 GameManager.Instance.SetFieldCellMatter(x + px, y + py, new Grass());
@@ -427,7 +382,5 @@ namespace WarOfFoxesAndRabbits
                 }
             }
         }
-
-
     }
 }

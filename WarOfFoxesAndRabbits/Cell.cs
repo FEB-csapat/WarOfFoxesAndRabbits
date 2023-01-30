@@ -1,20 +1,23 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace WarOfFoxesAndRabbits
 {
     public class Cell
     {
-        private Vector2 Position { get; set; }
+        public int RowPosition { get; private set; }
+        public int ColumnPosition { get; private set; }
 
-        public int PosX { get => (int)Position.X; }
-        public int PosY { get => (int)Position.Y; }
+        public int PositionX { get => RowPosition * GameConstants.CELL_SIZE; }
+        public int PositionY { get => ColumnPosition * GameConstants.CELL_SIZE; }
 
         public Animal Animal { get; set; }
         public Matter Matter { get; set; }
 
-        public Cell(Vector2 position, Matter matter = null, Animal animal = null)
+        public Cell(int rowPosition, int columnPosition, Matter matter = null, Animal animal = null)
         {
-            this.Position = position;
+            RowPosition = rowPosition;
+            ColumnPosition = columnPosition;
 
             if (matter == null)
             {
@@ -40,6 +43,14 @@ namespace WarOfFoxesAndRabbits
                     return Animal.Color;
                 }
             }
+        }
+
+
+        public void Draw(SpriteBatch spriteBatch, Texture2D rectangleBlock)
+        {
+            spriteBatch.Draw(rectangleBlock,
+                new Rectangle(PositionX, PositionY,
+                                GameConstants.CELL_SIZE, GameConstants.CELL_SIZE), Color);
         }
     }
 }

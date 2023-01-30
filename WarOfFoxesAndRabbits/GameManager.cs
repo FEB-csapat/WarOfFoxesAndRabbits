@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Xna.Framework.Graphics;
 
 namespace WarOfFoxesAndRabbits
 {
@@ -142,12 +138,12 @@ namespace WarOfFoxesAndRabbits
 
                     float waterDepth = noise.GetNoise(x, y);
 
-                    if (IsLakeEnabled && waterDepth >= GameConstants.MINT_WATER_DEPTH)
+                    if (IsLakeEnabled && waterDepth >= GameConstants.MIN_WATER_DEPTH)
                     {
                         hasWater = true;
                     }
 
-                    field[x, y] = new Cell(new Vector2(x, y), matter: hasWater ? new Water(waterDepth) : null);
+                    field[x, y] = new Cell(x, y, matter: hasWater ? new Water(waterDepth) : null);
                 }
             }
         }
@@ -232,9 +228,7 @@ namespace WarOfFoxesAndRabbits
             {
                 for (int x = 0; x < GameConstants.CELLS_VERTICALLY_COUNT; x++)
                 {
-                    spriteBatch.Draw(rectangleBlock,
-                        new Rectangle(x * GameConstants.CELL_SIZE, y * GameConstants.CELL_SIZE,
-                                      GameConstants.CELL_SIZE, GameConstants.CELL_SIZE), field[x, y].Color);
+                    field[x, y].Draw(spriteBatch, rectangleBlock);
                 }
             }
         }

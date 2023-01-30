@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace WarOfFoxesAndRabbits
 {
@@ -10,6 +11,14 @@ namespace WarOfFoxesAndRabbits
         {
             this.Text = text;
             this.Position = position;
+
+            Color = Color.Gray;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont)
+        {
+            spriteBatch.DrawString(spriteFont, Text,
+            new Vector2(Position.X, Position.Y), Color.Black);
         }
     }
 }

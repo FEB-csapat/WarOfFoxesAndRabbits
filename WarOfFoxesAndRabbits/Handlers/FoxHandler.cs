@@ -109,12 +109,12 @@ namespace WarOfFoxesAndRabbits
 
                 // has moved successfully
 
-                FindSurroundingCells(field, nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY,
+                FindSurroundingCells(field, nextCellWhereFoxMoved.RowPosition, nextCellWhereFoxMoved.ColumnPosition,
                     out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
                 if (surroundingCellsToMove.Count > 0)
                 {
                     nextCellWhereFoxMoved = Move(surroundingCellsToMove,
-                        field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                        field[nextCellWhereFoxMoved.RowPosition, nextCellWhereFoxMoved.ColumnPosition]);
                 }
 
             }
@@ -123,14 +123,14 @@ namespace WarOfFoxesAndRabbits
             {
                 nextCellWhereFoxMoved = Move(surroundingCellsToMove, field[x, y]);
 
-                FindSurroundingCells(field, nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY,
+                FindSurroundingCells(field, nextCellWhereFoxMoved.RowPosition, nextCellWhereFoxMoved.ColumnPosition,
                     out surroundingCellsToMove, out surroundingCellsToHunt, ref fatherFox);
 
                 //Check if it can hunt or not
                 if (surroundingCellsToHunt.Count > 0)
                 {
                     nextCellWhereFoxMoved = Hunt(surroundingCellsToHunt,
-                        field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                        field[nextCellWhereFoxMoved.RowPosition, nextCellWhereFoxMoved.ColumnPosition]);
                 }
                 else
                 {
@@ -138,7 +138,7 @@ namespace WarOfFoxesAndRabbits
                     if (surroundingCellsToMove.Count > 0)
                     {
                         nextCellWhereFoxMoved = Move(surroundingCellsToMove,
-                            field[nextCellWhereFoxMoved.PosX, nextCellWhereFoxMoved.PosY]);
+                            field[nextCellWhereFoxMoved.RowPosition, nextCellWhereFoxMoved.ColumnPosition]);
                     }
                 }
             }

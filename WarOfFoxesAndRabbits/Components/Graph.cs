@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace WarOfFoxesAndRabbits
@@ -7,16 +8,15 @@ namespace WarOfFoxesAndRabbits
     {
         List<GraphData> datas = new List<GraphData>();
 
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-
-        public List<GraphData> Datas => datas;
+        private List<GraphData> Datas => datas;
 
         public Graph(Vector2 position, int width = 300, int height = 200)
         {
             this.Position = position;
             this.Width = width;
             this.Height = height;
+
+            Color = Color.Gray;
         }
 
         public void AddData(AnimalType animalType, int count)
@@ -42,6 +42,13 @@ namespace WarOfFoxesAndRabbits
                     datas[i].Update();
                 }
             }
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, Texture2D rectangleBlock)
+        {
+            base.Draw(spriteBatch, rectangleBlock);
+            Datas.ForEach(x => x.Draw(spriteBatch, rectangleBlock));
+
         }
     }
 }

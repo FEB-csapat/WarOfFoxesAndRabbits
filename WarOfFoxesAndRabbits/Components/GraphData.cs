@@ -2,28 +2,20 @@
 
 namespace WarOfFoxesAndRabbits
 {
-    public class GraphData
+    public class GraphData : Component
     {
         public AnimalType AnimalType { get; private set; }
-        public Vector2 Position { get; private set; }
 
         public GraphData(AnimalType animalType, Vector2 position)
         {
             this.AnimalType = animalType;
             this.Position = position;
+
+            Width = GameConstants.GRAPH_RECT_SIZE;
+            Height = GameConstants.GRAPH_RECT_SIZE;
         }
 
-        public Color Color
-        {
-            get
-            {
-                if (AnimalType == AnimalType.RABBIT)
-                {
-                    return Color.White;
-                }
-                return Color.Red;
-            }
-        }
+        public override Color Color => AnimalType == AnimalType.RABBIT ? Color.White : Color.Red;
 
         public void Update()
         {

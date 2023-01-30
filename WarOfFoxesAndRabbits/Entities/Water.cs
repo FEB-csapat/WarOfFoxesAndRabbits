@@ -19,9 +19,10 @@ namespace WarOfFoxesAndRabbits
             }
         }
 
+        // Maps the color to the depth of water
         private Color MapColor()
         {
-            double h = 1 - GameConstants.MINT_WATER_DEPTH;
+            double h = 1 - GameConstants.MIN_WATER_DEPTH;
 
             double p = (1 - depth) / h;
 

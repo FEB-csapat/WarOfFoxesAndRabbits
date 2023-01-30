@@ -53,6 +53,9 @@ namespace WarOfFoxesAndRabbits
                 Exit();
             }
 
+
+            MouseState currentMouseState = Mouse.GetState();
+
             GameManager.Instance.TickCounter++;
             if (GameManager.Instance.TickCounter % (60 / GameManager.Instance.Tickrate) == 0)
             {
@@ -60,13 +63,9 @@ namespace WarOfFoxesAndRabbits
                 {
                     GameManager.Instance.Update();
 
-                    ComponentManager.Instance.Update();
+                    ComponentManager.Instance.Update(currentMouseState);
                 }
             }
-
-            MouseState currentMouseState = Mouse.GetState();
-
-            ComponentManager.Instance.UpdateCoordinationLabel(currentMouseState);
 
             // Mouse clicked
             if (previousMouseState.LeftButton == ButtonState.Released

@@ -19,6 +19,6 @@ namespace WarOfFoxesAndRabbits
 
         public const int GAME_CANVAS_WIDTH = CELLS_HORIZONTALLY_COUNT * CELL_SIZE;
 
-        public const float MINT_WATER_DEPTH = 0.55f;
+        public const float MIN_WATER_DEPTH = 0.55f;
     }
 }
